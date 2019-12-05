@@ -1,6 +1,6 @@
 package com.cwj.game.oxygen.rocket.core;
 
-import com.cwj.game.oxygen.rocket.constant.Constant;
+import com.cwj.game.oxygen.rocket.constant.RocketComponent;
 
 public class Rules {
 
@@ -47,11 +47,11 @@ public class Rules {
      */
     public static double rocketMassPenalty(int researchNum, int warehouseNum, int fuelBinNum, int oxidantBinNum, 
             int thrusterQuality, double fuelQuality, double oxidantQuality, boolean hasToursim) {
-        double totalQuality = Constant.QUALITY_COMMANDER + (hasToursim ? Constant.QUALITY_TOURISM : 0);
-        totalQuality += researchNum * Constant.QUALITY_RESEARCH;
-        totalQuality += warehouseNum * Constant.QUALITY_WAREHOUSE;
-        totalQuality += fuelBinNum * Constant.QUALITY_FUEL_BIN;
-        totalQuality += oxidantBinNum * Constant.QUALITY_OXIDANT_BIN;
+        double totalQuality = RocketComponent.COMMANDER.quality() + (hasToursim ? RocketComponent.TOURISM.quality() : 0);
+        totalQuality += researchNum * RocketComponent.RESEARCH.quality();
+        totalQuality += warehouseNum * RocketComponent.WAREHOUSE.quality();
+        totalQuality += fuelBinNum * RocketComponent.FUELBIN.quality();
+        totalQuality += oxidantBinNum * RocketComponent.OXIDANTBIN.quality();
         totalQuality += thrusterQuality + fuelQuality + oxidantQuality;
         return totalQuality < 4000 ? totalQuality :  (totalQuality / 300) * 3.2;
     }
@@ -61,18 +61,12 @@ public class Rules {
      * @param engineType 火箭推进器种类
      * @param engineNum 推进器数量
      */
-    public static int engineQuality(int engineType, int engineNum) {
-        int engineQuality;
-        switch (engineType) {
-        case Constant.ENGINE_STEAM :
-            engineQuality = Constant.QUALITY_ENGINE_STEAM;
-            break;
-        case Constant.ENGINE_PETROLEUM :
-            engineQuality = Constant.QUALITY_ENGINE_PETROLEUM;
-            break;
-        default :
-            engineQuality = Constant.QUALITY_ENGINE_HYDROGEN;
+    public static int engineQuality(String engineType, int engineNum) {
+        for (RocketComponent component : RocketComponent.values()) {
+            if (engineType == component.componentName()) {
+                return component.quality() * engineNum;
+            }
         }
-        return engineQuality * engineNum;
+        return 0;
     }
 }
