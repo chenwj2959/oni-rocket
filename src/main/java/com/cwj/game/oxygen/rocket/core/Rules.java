@@ -20,7 +20,7 @@ public class Rules {
      * <br/>
      * 燃料质量 : 蒸汽 = 20, 精炼铁(固体推进) = 30, 石油 = 40, 液氢 = 60
      * <br/>
-     * 氧化剂效率 : 氧石 = 1, 液氧 = 4 / 3
+     * 氧化剂效率 : 氧石 = 1, 液氧 = 1.33
      * @param fuelQuality 燃料质量
      * @param fuelEfficiency 燃料效率
      * @param oxidantQuality 氧化剂质量
@@ -52,7 +52,7 @@ public class Rules {
         totalQuality += warehouseNum * Constant.QUALITY_WAREHOUSE;
         totalQuality += fuelBinNum * Constant.QUALITY_FUEL_BIN;
         totalQuality += oxidantBinNum * Constant.QUALITY_OXIDANT_BIN;
-        totalQuality += thrusterQuality +fuelQuality + oxidantQuality;
+        totalQuality += thrusterQuality + fuelQuality + oxidantQuality;
         return totalQuality < 4000 ? totalQuality :  (totalQuality / 300) * 3.2;
     }
     

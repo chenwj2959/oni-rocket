@@ -16,7 +16,7 @@ public class Constant {
     // 固体氧(氧石)
     public static final int OXIDANT_EFFICIENCY_SOLID = 1;
     // 液氧
-    public static final double OXIDANT_EFFICIENCY_LIQUID = 4 / 3;
+    public static final double OXIDANT_EFFICIENCY_LIQUID = 1.33;
     
     // === 火箭部件 ===
     // 蒸汽推进器
@@ -25,6 +25,7 @@ public class Constant {
     public static final int ENGINE_PETROLEUM = 2;
     // 液氢推进器
     public static final int ENGINE_HYDROGEN = 3;
+    // TODO 固体推进器
     
     // === 火箭部件质量 ===
     // 指挥仓
@@ -39,6 +40,7 @@ public class Constant {
     public static final int QUALITY_OXIDANT_BIN = 100;
     // 蒸汽推进器
     public static final int QUALITY_ENGINE_STEAM = 2000;
+    // TODO 固体推进器
     // 石油推进器
     public static final int QUALITY_ENGINE_PETROLEUM = 200;
     // 液氢推进器
