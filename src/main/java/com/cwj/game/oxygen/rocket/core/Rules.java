@@ -1,14 +1,16 @@
 package com.cwj.game.oxygen.rocket.core;
 
+import com.cwj.game.oxygen.rocket.constant.Constant;
+
 public class Rules {
 
     /**
-     * 计算 最终飞行高度 = 燃料推力 - 重量惩罚
-     * @param thrust 燃料推力
-     * @param quality 重量惩罚
+     * 计算 最终飞行高度 = 燃料推力 - 火箭质量惩罚
+     * @param thrustHeight 燃料推力
+     * @param rocketMassPenalty 火箭质量惩罚(km)
      */
-    public double flightHeight(double thrust, int quality) {
-        return thrust - quality;
+    public static double flightHeight(double thrustHeight, double rocketMassPenalty) {
+        return thrustHeight - rocketMassPenalty;
     }
     
     /**
@@ -24,7 +26,53 @@ public class Rules {
      * @param oxidantQuality 氧化剂质量
      * @param oxidantEfficiency 氧化剂效率
      */
-    public double thrustHeight(int fuelQuality, int fuelEfficiency, int oxidantQuality, double oxidantEfficiency) {
+    public static double thrustHeight(double fuelQuality, int fuelEfficiency, double oxidantQuality, double oxidantEfficiency) {
         return Math.min(fuelQuality, oxidantQuality) * fuelEfficiency * oxidantEfficiency;
+    }
+    
+    /**
+     * 火箭质量惩罚 = 指挥舱(默认) + 研究仓 + 货仓 + 燃料仓 + 氧化剂仓 + 推进器 + 燃料 + 氧化剂
+     * <br/>
+     * 当火箭总质量 < 4000kg, 质量惩罚(km) = 总质量(kg)
+     * <br/>
+     * 火箭总质量 >= 4000kg, 质量惩罚(km) = (总质量(kg) / 300) * 3.2
+     * @param researchNum 研究仓数量
+     * @param warehouseNum 货仓数量
+     * @param fuelBinNum 燃料仓数量
+     * @param oxidantBinNum 氧化剂仓数量
+     * @param thrusterQuality 推进器总质量
+     * @param fuelQuality 燃料质量
+     * @param oxidantQuality 氧化剂质量
+     * @param hasToursim 是否有观光仓
+     */
+    public static double rocketMassPenalty(int researchNum, int warehouseNum, int fuelBinNum, int oxidantBinNum, 
+            int thrusterQuality, double fuelQuality, double oxidantQuality, boolean hasToursim) {
+        double totalQuality = Constant.QUALITY_COMMANDER + (hasToursim ? Constant.QUALITY_TOURISM : 0);
+        totalQuality += researchNum * Constant.QUALITY_RESEARCH;
+        totalQuality += warehouseNum * Constant.QUALITY_WAREHOUSE;
+        totalQuality += fuelBinNum * Constant.QUALITY_FUEL_BIN;
+        totalQuality += oxidantBinNum * Constant.QUALITY_OXIDANT_BIN;
+        totalQuality += thrusterQuality +fuelQuality + oxidantQuality;
+        return totalQuality < 4000 ? totalQuality :  (totalQuality / 300) * 3.2;
+    }
+    
+    /**
+     * 计算 火箭推进器质量 = 单个推机器质量 * 推进器数量
+     * @param engineType 火箭推进器种类
+     * @param engineNum 推进器数量
+     */
+    public static int engineQuality(int engineType, int engineNum) {
+        int engineQuality;
+        switch (engineType) {
+        case Constant.ENGINE_STEAM :
+            engineQuality = Constant.QUALITY_ENGINE_STEAM;
+            break;
+        case Constant.ENGINE_PETROLEUM :
+            engineQuality = Constant.QUALITY_ENGINE_PETROLEUM;
+            break;
+        default :
+            engineQuality = Constant.QUALITY_ENGINE_HYDROGEN;
+        }
+        return engineQuality * engineNum;
     }
 }
