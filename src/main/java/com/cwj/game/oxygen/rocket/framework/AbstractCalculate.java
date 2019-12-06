@@ -16,12 +16,13 @@ public abstract class AbstractCalculate extends JPanel {
     
     // 默认间隔大小
     public static final int MARGIN_TOP = 25;
-    public static final int MARGIN_LEFT = 50;
+    public static final int MARGIN_LEFT = 25;
     
-    public static final int TEXT_WIDTH = 100;
-    public static final int TEXT_HEIGHT = 25;
+    public static final int DEFAULT_WIDTH = 100;
+    public static final int DEFAULT_HEIGHT = 25;
     
     public static final int BUTTON_MARGIN_TOP = 10;
+    public static final int BUTTON_WIDTH = 50;
     
     private HashMap<String, Component> componentMap;
     

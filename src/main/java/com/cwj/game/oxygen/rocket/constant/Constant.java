@@ -1,20 +1,19 @@
 package com.cwj.game.oxygen.rocket.constant;
 
 public class Constant {
-
-    // === 燃料效率 ===
-    // 蒸汽
-    public static final int FUEL_EFFICIENCY_STEAM = 20;
-    // 精炼铁
-    public static final int FUEL_EFFICIENCY_IRON = 30;
-    // 石油
-    public static final int FUEL_EFFICIENCY__PETROLEUM = 40;
-    // 液氢
-    public static final int FUEL_EFFICIENCY_HYDROGEN = 60;
     
-    // === 氧化剂效率 ===
-    // 固体氧(氧石)
-    public static final int OXIDANT_EFFICIENCY_SOLID = 1;
-    // 液氧
-    public static final double OXIDANT_EFFICIENCY_LIQUID = 1.33;
+    // === COMMON ===
+    public static final String NEW_LINE = "\n";
+    
+    public static final String LABEL_OXIDANT_TYPE = "氧化剂类型";
+    
+    // 单个燃料仓最大的燃料质量
+    public static final int FUEL_BIN_MAX_QUALITY = 900;
+    // 单个固体推进器燃料质量
+    public static final int ENGINE_IRON_MAX_FUEL_QUALITY = 400;
+    
+    // 单个氧化剂仓最大的氧化剂质量
+    public static final int OXIDANT_BIN_MAX_QUALITY = 2700;
+    // 单个固体推进器氧化剂质量
+    public static final int ENGINE_IRON_MAX_OXIDANT_QUALITY = 400;
 }

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="false" packagingData="true">
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>[%d{HH:mm:ss.SSS}][%p][%X{logName}]%replace(%caller{1}){'\t|Caller.{1}0|\r\n', ''} - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="MAIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <rollingPolicy
+            class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+            <FileNamePattern>logs/%d{yyyyMMdd}/Main(%i).log.gz
+            </FileNamePattern>
+            <maxHistory>30</maxHistory>
+            <maxFileSize>30MB</maxFileSize>
+        </rollingPolicy>
+        <encoder>
+            <pattern>[%d{HH:mm:ss.SSS}][%p][%X{logName}]%replace(%caller{1}){'\t|Caller.{1}0|\r\n', ''} - %m%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE-THREAD" class="ch.qos.logback.classic.sift.SiftingAppender">
+        <discriminator>
+            <key>logName</key>
+            <defaultValue>Main</defaultValue>
+        </discriminator>
+        <sift>
+            <appender name="FILE"
+                class="ch.qos.logback.core.rolling.RollingFileAppender">
+                <rollingPolicy
+                    class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                    <FileNamePattern>logs/%d{yyyyMMdd}/${logName}(%i).log.gz
+                    </FileNamePattern>
+                    <maxHistory>30</maxHistory>
+                    <maxFileSize>30MB</maxFileSize>
+                </rollingPolicy>
+                <encoder>
+                    <pattern>[%d{HH:mm:ss.SSS}][%p]%replace(%caller{1}){'\t|Caller.{1}0|\r\n', ''} - %m%n</pattern>
+                </encoder>
+            </appender>
+        </sift>
+    </appender>
+
+    <root>
+        <level value="error" />
+        <level value="info" />
+        <level value="debug" />
+        <appender-ref ref="STDOUT" />
+        <appender-ref ref="MAIN" />
+        <appender-ref ref="FILE-THREAD" />
+    </root>
+</configuration>
