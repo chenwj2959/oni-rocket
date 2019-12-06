@@ -5,16 +5,12 @@ import com.cwj.game.oxygen.rocket.constant.RocketComponent;
 public class Rules {
 
     /**
-     * 计算 最终飞行高度
-     * <br/>
-     * 当总质量小于4000时, 高度 = 燃料推力 - 火箭质量惩罚
-     * <br/>
-     * 当总质量大于4000时, 高度 = 300 * 总推力高度 / (300 + 3.2 * 总质量)
+     * 计算 最终飞行高度 = 燃料推力 - 火箭质量惩罚
      * @param thrustHeight 燃料推力
      * @param rocketMassPenalty 火箭质量惩罚(km)
      */
-    public static double flightHeight(double thrustHeight, double totalQuality) {
-        return totalQuality < 4000 ? thrustHeight - totalQuality : (300 * thrustHeight) / (300 + 3.2 * totalQuality);
+    public static double flightHeight(double thrustHeight, double rocketMassPenalty) {
+        return Math.ceil(thrustHeight - rocketMassPenalty);
     }
     
     /**
@@ -53,6 +49,16 @@ public class Rules {
         totalQuality += fuelBinNum * RocketComponent.FUELBIN.quality();
         totalQuality += oxidantBinNum * RocketComponent.OXIDANTBIN.quality();
         return totalQuality + thrusterQuality + Math.min(fuelQuality, oxidantQuality) * 2;
+    }
+    
+    /**
+     * 当总质量小于4000时, 质量惩罚 = 总质量
+     * <br/>
+     * 当总质量大于4000时, 质量惩罚 = (总质量 / 300) ^ 3.2
+     * @param totalQuality 总质量
+     */
+    public static double rocketMassPenalty(double totalQuality) {
+        return totalQuality < 4000 ? totalQuality : Math.pow(totalQuality / 300, 3.2);
     }
     
     /**

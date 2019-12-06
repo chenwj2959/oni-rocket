@@ -34,6 +34,12 @@ public class Rocket {
     // 燃料种类
     private FuelType fuelType;
     
+    // 燃料质量
+    private int fuelQuality;
+    
+    // 氧化剂质量
+    private int oxidantQuality;
+    
     /**
      * 返回火箭主体
      */
@@ -107,7 +113,10 @@ public class Rocket {
      * 添加燃料仓
      */
     public void addFuelBin(int num) {
+        if (fuelBinNum == 0) addOxidantBin(1);
         fuelBinNum = fixLimit(fuelBinNum + num, 0, 3);
+        fuelQuality = fuelBinNum * Constant.FUEL_BIN_MAX_QUALITY;
+        oxidantQuality = fuelQuality;
     }
     
     /**
@@ -129,6 +138,8 @@ public class Rocket {
         if (RocketComponent.ENGINE_STEAM.componentName().equals(engineStr)) {
             this.engineType = RocketComponent.ENGINE_STEAM;
             setFuelType(FuelType.STEAM);
+            fuelQuality = 2000;
+            oxidantQuality = 0;
         } else if (RocketComponent.ENGINE_PETROLEUM.componentName().equals(engineStr)) {
             this.engineType = RocketComponent.ENGINE_PETROLEUM;
             setFuelType(FuelType.PETROLEUM);
@@ -199,6 +210,22 @@ public class Rocket {
 
     public void setFuelType(FuelType fuelType) {
         this.fuelType = fuelType;
+    }
+
+    public int getFuelQuality() {
+        return fuelQuality;
+    }
+
+    public void setFuelQuality(int fuelQuality) {
+        this.fuelQuality = fuelQuality;
+    }
+
+    public int getOxidantQuality() {
+        return oxidantQuality;
+    }
+
+    public void setOxidantQuality(int oxidantQuality) {
+        this.oxidantQuality = oxidantQuality;
     }
 
     private int fixLimit(int curr, int min, int max) {

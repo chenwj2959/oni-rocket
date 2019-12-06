@@ -40,13 +40,16 @@ public class RocketUtil {
         double totalQuality = Rules.totalQuality(rocket.getResearchNum(), rocket.getWareHouseNum(), 
                 rocket.getFuelBinNum(), rocket.getOxidantBinNum(), engineQuality, fuelQuality, oxidantQuality, rocket.isHasToursim());
         log.debug("火箭总质量为{}kg", totalQuality);
+        // 质量惩罚
+        double rocketMassPenalty = Rules.rocketMassPenalty(totalQuality);
+        log.debug("火箭质量惩罚为{}km", rocketMassPenalty);
         // 计算总推力
         double maxHeight = Rules.thrustHeight(fuelQuality, rocket.getFuelType().efficiency(), 
                 oxidantQuality, rocket.getOxidantType().efficiency());
         maxHeight += rocket.getIronEngineNum() * Constant.ENGINE_IRON_MAX_FUEL_QUALITY * FuelType.IRON.efficiency();
         maxHeight += rocket.getEngineType().equals(RocketComponent.ENGINE_STEAM) ? Constant.FUEL_BIN_MAX_QUALITY * FuelType.STEAM.efficiency() : 0;
         log.debug("火箭总推力为{}km", maxHeight);
-        int finalHeight = (int) Rules.flightHeight(maxHeight, totalQuality);
+        int finalHeight = (int) Rules.flightHeight(maxHeight, rocketMassPenalty);
         log.debug("火箭最大飞行高度为{}km", finalHeight);
         return finalHeight;
     }
