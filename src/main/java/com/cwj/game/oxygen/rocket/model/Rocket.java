@@ -95,6 +95,19 @@ public class Rocket {
     }
     
     /**
+     * 返回火箭组件总质量
+     */
+    public int getComponentQuality() {
+        return RocketComponent.COMMANDER.quality() + (hasToursim ? RocketComponent.TOURISM.quality() : 0)
+                + RocketComponent.RESEARCH.quality() * researchNum
+                + RocketComponent.WAREHOUSE.quality() * wareHouseNum
+                + RocketComponent.FUELBIN.quality() * fuelBinNum
+                + RocketComponent.OXIDANTBIN.quality() * oxidantBinNum
+                + RocketComponent.ENGINE_IRON.quality() * ironEngineNum
+                + engineType.quality();
+    }
+    
+    /**
      * 添加研究仓
      */
     public void addResearch(int num) {

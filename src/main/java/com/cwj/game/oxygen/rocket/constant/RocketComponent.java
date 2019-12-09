@@ -25,4 +25,11 @@ public enum RocketComponent {
     public int quality() {
         return quality;
     }
+    
+    /**
+     * 推进器质量
+     */
+    public int engineQuality(int engineNum) {
+        return quality * engineNum;
+    }
 }
