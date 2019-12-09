@@ -34,8 +34,7 @@ public class RocketUtil {
                 + rocket.getIronEngineNum() * Constant.ENGINE_IRON_MAX_FUEL_QUALITY
                 + (rocket.getEngineType().equals(RocketComponent.ENGINE_STEAM) ? Constant.FUEL_BIN_MAX_QUALITY : 0);
         log.debug("燃料总质量为{}kg", fuelQuality);
-        int oxidantQuality = rocket.getOxidantBinNum() * Constant.OXIDANT_BIN_MAX_QUALITY
-                + rocket.getIronEngineNum() * Constant.ENGINE_IRON_MAX_OXIDANT_QUALITY;
+        int oxidantQuality = rocket.getOxidantQuality() + rocket.getIronEngineNum() * Constant.ENGINE_IRON_MAX_OXIDANT_QUALITY;
         log.debug("氧化剂总质量为{}kg", oxidantQuality);
         // 计算质量
         double totalQuality = Rules.totalQuality(rocket.getResearchNum(), rocket.getWareHouseNum(),
