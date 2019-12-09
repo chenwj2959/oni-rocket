@@ -147,8 +147,8 @@ public class CalcMaxHeight extends AbstractCalculate {
             result.setText(issues);
             return;
         }
-        int maxHeight = RocketUtil.calcHeight(rocket);
-        if (maxHeight <= 10000) result.setText("火箭无法起飞！");
-        else result.setText("火箭最大的飞行高度为" + maxHeight + "km");
+        Dimension dimension = RocketUtil.calcHeight(rocket);
+        if (dimension == null || dimension.getHeight() < 10000) result.setText("火箭无法起飞！");
+        else result.setText("火箭最大的飞行高度为" + dimension.getHeight() + "km" + ", 所需燃料" + dimension.getWidth() + "kg");
     }
 }

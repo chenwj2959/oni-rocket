@@ -22,9 +22,6 @@ public class Rocket {
     // 推进器类型
     private RocketComponent engineType;
     
-    // 固体推进器数量
-    private int ironEngineNum;
-    
     // 是否有观光仓
     private boolean hasToursim;
     
@@ -39,6 +36,12 @@ public class Rocket {
     
     // 氧化剂质量
     private int oxidantQuality;
+    
+    // 固体助推器数量
+    private int ironEngineNum;
+    
+    // 精炼铁质量
+    private int ironQuality;
     
     /**
      * 返回火箭主体
@@ -91,6 +94,8 @@ public class Rocket {
             setHasToursim(false);
         } else if (engineType != null && engineType.componentName().equals(component)) {
             engineType = null;
+        } else {
+            addIronEngine(-1);
         }
     }
     
@@ -151,7 +156,7 @@ public class Rocket {
         if (RocketComponent.ENGINE_STEAM.componentName().equals(engineStr)) {
             this.engineType = RocketComponent.ENGINE_STEAM;
             setFuelType(FuelType.STEAM);
-            fuelQuality = 2000;
+            fuelQuality = Constant.FUEL_BIN_MAX_QUALITY;
             oxidantQuality = 0;
         } else if (RocketComponent.ENGINE_PETROLEUM.componentName().equals(engineStr)) {
             this.engineType = RocketComponent.ENGINE_PETROLEUM;
@@ -239,6 +244,14 @@ public class Rocket {
 
     public void setOxidantQuality(int oxidantQuality) {
         this.oxidantQuality = oxidantQuality;
+    }
+
+    public int getIronQuality() {
+        return ironQuality;
+    }
+
+    public void setIronQuality(int ironQuality) {
+        this.ironQuality = ironQuality;
     }
 
     private int fixLimit(int curr, int min, int max) {
