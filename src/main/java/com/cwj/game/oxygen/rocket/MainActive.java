@@ -10,7 +10,7 @@ import com.cwj.game.oxygen.rocket.core.CalcMaxHeight;
 public class MainActive {
     
     public static void main(String[] args) {
-        JFrame windows = new JFrame("缺氧火箭计算器 - 休闲包更新版本");
+        JFrame windows = new JFrame("RP缺氧火箭计算器");
         windows.setSize(550, 450);
         windows.setLocationRelativeTo(null);
         windows.setResizable(false);
