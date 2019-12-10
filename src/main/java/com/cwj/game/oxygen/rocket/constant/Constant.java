@@ -7,6 +7,9 @@ public class Constant {
     
     public static final String LABEL_OXIDANT_TYPE = "氧化剂类型";
     
+    // 质量惩罚公式分割点
+    public static final int QUALITY_QUNISHMENT_SPLIT_VALUE = 4000;
+    
     // 单个燃料仓最大的燃料质量
     public static final int FUEL_BIN_MAX_QUALITY = 900;
     // 单个固体推进器燃料质量

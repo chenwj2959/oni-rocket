@@ -16,6 +16,7 @@ import com.cwj.game.oxygen.rocket.constant.Constant;
 import com.cwj.game.oxygen.rocket.constant.OxidantType;
 import com.cwj.game.oxygen.rocket.constant.RocketComponent;
 import com.cwj.game.oxygen.rocket.framework.AbstractCalculate;
+import com.cwj.game.oxygen.rocket.model.Result;
 import com.cwj.game.oxygen.rocket.utils.RocketUtil;
 
 /**
@@ -40,7 +41,7 @@ public class CalcMaxHeight extends AbstractCalculate {
         textArea.setEnabled(false);
         JScrollPane rocketText = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
                 , JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        rocketText.setBounds(MARGIN_LEFT + dimension.width, MARGIN_TOP, DEFAULT_WIDTH, dimension.height);
+        rocketText.setBounds(MARGIN_LEFT + dimension.width, MARGIN_TOP, ROCKET_TEXT_WIDTH, dimension.height);
         rocketText.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         this.add(rocketText);
         put(ROCKET_TEXT, textArea);
@@ -49,8 +50,8 @@ public class CalcMaxHeight extends AbstractCalculate {
         JTextArea result = new JTextArea();
         result.setLineWrap(true);
         result.setBackground(new Color(238, 238, 238));
-        result.setEnabled(false);
-        result.setBounds(MARGIN_LEFT * 2 + dimension.width + DEFAULT_WIDTH, MARGIN_TOP, DEFAULT_WIDTH, dimension.height);
+        result.setEditable(false);
+        result.setBounds(MARGIN_LEFT + dimension.width + DEFAULT_WIDTH, MARGIN_TOP, RESULT_TEXT_WIDTH, dimension.height);
         this.add(result);
         put(RESULT, result);
     }
@@ -141,14 +142,23 @@ public class CalcMaxHeight extends AbstractCalculate {
      * 显示结果
      */
     private void showResult() {
-        JTextArea result = (JTextArea) get(RESULT);
+        JTextArea resultText = (JTextArea) get(RESULT);
         String issues = RocketUtil.checkRocket(rocket);
         if (issues != null) {
-            result.setText(issues);
+            resultText.setText(issues);
             return;
         }
-        Dimension dimension = RocketUtil.calcHeight(rocket);
-        if (dimension == null || dimension.getHeight() < 10000) result.setText("火箭无法起飞！");
-        else result.setText("火箭最大的飞行高度为" + dimension.getHeight() + "km" + ", 所需燃料" + dimension.getWidth() + "kg");
+        Result result = RocketUtil.calcHeight(rocket);
+        if (result == null || result.getFinalHeight() < 10000) resultText.setText("火箭无法起飞！");
+        else {
+            StringBuilder builder = new StringBuilder();
+            builder.append("组件质量 : ").append(result.getComponentQuality()).append(" kg\n")
+                .append("燃料质量 : ").append(result.getFuelQuality()).append(" kg\n")
+                .append("总质量 : ").append(result.getTotalQuality()).append(" kg\n")
+                .append("质量惩罚 : ").append(result.getQualityPunishment()).append(" km\n")
+                .append("最大推力 : ").append(result.getMaxHeight()).append(" km\n")
+                .append("飞行高度 : ").append(result.getFinalHeight()).append(" km");
+            resultText.setText(builder.toString());
+        }
     }
 }
