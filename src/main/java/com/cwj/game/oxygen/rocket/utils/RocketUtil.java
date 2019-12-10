@@ -3,8 +3,8 @@ package com.cwj.game.oxygen.rocket.utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.alibaba.fastjson.JSON;
 import com.cwj.game.oxygen.rocket.constant.Constant;
+import com.cwj.game.oxygen.rocket.constant.FuelType;
 import com.cwj.game.oxygen.rocket.constant.RocketComponent;
 import com.cwj.game.oxygen.rocket.model.Result;
 import com.cwj.game.oxygen.rocket.model.Rocket;
@@ -21,124 +21,106 @@ public class RocketUtil {
     /** 
      * 计算火箭最大飞行高度和燃料质量
      */
-    public static Result calcHeight2(Rocket rocket) {
+    public static Result calcHeight(Rocket rocket) {
         RocketComponent engineType = rocket.getEngineType();
         if (engineType == null) return null;
         Result result = new Result();
         int componentQuality = rocket.getComponentQuality();
-        log.debug("组件质量 {} kg", componentQuality);
         result.setComponentQuality(componentQuality);
-        if (RocketComponent.ENGINE_STEAM.equals(engineType)) {
-            log.debug("蒸汽推进器");
-            int fuelQuality = rocket.getFuelQuality();
+        int maxFuelQuality = rocket.getFuelQuality();
+        int totalQuality = calcTotalQuality(rocket, maxFuelQuality);
+        if (totalQuality > Constant.QUALITY_QUNISHMENT_SPLIT_VALUE) {
+            int minFuelQuality = Math.max(Constant.QUALITY_QUNISHMENT_SPLIT_VALUE - componentQuality, 0);
+            minFuelQuality = Math.min(minFuelQuality, maxFuelQuality);
+            int qualityPunishment = 0, maxHeight = 0, fuelQuality = 0, finalHeight = Integer.MIN_VALUE;
+            for (int currFuelQuality = maxFuelQuality; currFuelQuality > minFuelQuality; currFuelQuality--) {
+                int currTotalQuality = calcTotalQuality(rocket, currFuelQuality);
+                int currQualityPunishment = calcQualityPunishment(currTotalQuality);
+                int currMaxHeight = calcMaxHeight(rocket, currFuelQuality);
+                int currFinalHeight = currMaxHeight - currQualityPunishment;
+                if (currFinalHeight < finalHeight) break;
+                finalHeight = currFinalHeight;
+                maxHeight = currMaxHeight;
+                qualityPunishment = currQualityPunishment;
+                totalQuality = currTotalQuality;
+                fuelQuality = currFuelQuality;
+            }
+            // 当组件质量 < 4000, 计算燃料质量 = 4000 - 组件质量时的飞行高度
+            if (componentQuality < Constant.QUALITY_QUNISHMENT_SPLIT_VALUE) {
+                int remindFuelQuality = Math.min(Constant.QUALITY_QUNISHMENT_SPLIT_VALUE - componentQuality, Constant.FUEL_BIN_MAX_QUALITY);
+                int remindTotalQuality = remindFuelQuality + componentQuality;
+                remindFuelQuality = RocketComponent.ENGINE_STEAM.equals(rocket.getEngineType()) ? remindFuelQuality : remindFuelQuality / 2;
+                int remindMaxHeight = calcMaxHeight(rocket, remindFuelQuality);
+                int remindFinalHeight = remindMaxHeight - remindTotalQuality;
+                if (remindFinalHeight > finalHeight) {
+                    finalHeight = remindFinalHeight;
+                    maxHeight = remindMaxHeight;
+                    qualityPunishment = remindTotalQuality;
+                    totalQuality = remindTotalQuality;
+                    fuelQuality = remindTotalQuality - componentQuality;
+                }
+            }
+            result.setFinalHeight(finalHeight);
+            result.setMaxHeight(maxHeight);
+            result.setQualityPunishment(qualityPunishment);
+            result.setTotalQuality(totalQuality);
             result.setFuelQuality(fuelQuality);
-            log.debug("燃料质量 {} kg", fuelQuality);
-            if (componentQuality + fuelQuality < Constant.QUALITY_QUNISHMENT_SPLIT_VALUE) {
-                int totalQuality = componentQuality + fuelQuality;
-                result.setTotalQuality(totalQuality);
-                result.setQualityPunishment(totalQuality);
-                log.debug("质量惩罚 = 总质量 {} km/kg", Constant.QUALITY_QUNISHMENT_SPLIT_VALUE);
-                int maxHeight = rocket.getFuelQuality() * rocket.getFuelType().efficiency();
-                result.setMaxHeight(maxHeight);
-                log.debug("最大推力 {} km", maxHeight);
-                int finalHeight = maxHeight - totalQuality;
-                log.debug("最终高度 {} km", finalHeight);
-                result.setFinalHeight(finalHeight);
-                return result;
-            }
-            
+        } else {
+            // 总质量 < 4000时
+            result.setTotalQuality(totalQuality);
+            int maxHeight = calcMaxHeight(rocket, maxFuelQuality);
+            int qualityPunishment = calcQualityPunishment(totalQuality);
+            result.setFuelQuality(rocket.getFuelQuality());
+            result.setMaxHeight(maxHeight);
+            result.setQualityPunishment(qualityPunishment);
+            result.setFinalHeight(maxHeight - qualityPunishment);
         }
+        log.debug(result.toString());
+        return result;
     }
     
-    /** 
-     * 计算火箭最大飞行高度和燃料质量
+    /**
+     * 计算火箭总质量
      */
-    public static Result calcHeight(Rocket rocket) {
+    private static int calcTotalQuality(Rocket rocket, int fuelQuality) {
+     // 组件质量
+        int componentQuality = rocket.getComponentQuality();
+        log.debug("火箭组件质量 = {} kg", componentQuality);
+        fuelQuality *= RocketComponent.ENGINE_STEAM.equals(rocket.getEngineType()) ? 1 : 2;
+        log.debug("火箭液体燃料质量 = {} kg", fuelQuality);
+        int ironFuelQuality = rocket.getIronEngineNum() * Constant.ENGINE_IRON_MAX_FUEL_QUALITY;
+        if (ironFuelQuality != 0) log.debug("火箭固体燃料质量 = {} kg", ironFuelQuality);
+        int totalQuality = componentQuality + fuelQuality + ironFuelQuality;
+        log.debug("火箭总质量 = {} kg", totalQuality);
+        return totalQuality;
+    }
+    
+    /**
+     * 计算火箭质量惩罚
+     */
+    private static int calcQualityPunishment(int totalQuality) {
+        return totalQuality > Constant.QUALITY_QUNISHMENT_SPLIT_VALUE ? (int) Math.round(Math.pow((totalQuality * 1.0 / 300), 3.2)) : totalQuality;
+    }
+    
+    /**
+     * 计算火箭的最大推进高度
+     */
+    private static int calcMaxHeight(Rocket rocket, int fuelQuality) {
+        int maxHeight = 0;
         RocketComponent engineType = rocket.getEngineType();
-        if (engineType == null) return null;
-        Result less = getResultLess(rocket);
-        Result more = getResultMore(rocket);
-        Result result = less.getFinalHeight() > more.getFinalHeight() ? less : more;
-        log.debug("Best fuel quality = {}", JSON.toJSONString(result));
-        return result;
-    }
-
-    /**
-     * 计算总质量小于4000时的结果
-     */
-    private static Result getResultLess(Rocket rocket) {
-        Result result = new Result();
-        result.setComponentQuality(rocket.getComponentQuality());
-        int fuelQuality;
-        double maxHeight;
-        int qualityPunishment;
-        if (rocket.getEngineType().equals(RocketComponent.ENGINE_STEAM)) {
-            fuelQuality = Math.min(Constant.QUALITY_QUNISHMENT_SPLIT_VALUE - rocket.getComponentQuality(), rocket.getFuelQuality());
-            maxHeight = rocket.getFuelType().efficiency() * fuelQuality;
-            qualityPunishment = fuelQuality + rocket.getComponentQuality();
+        if (RocketComponent.ENGINE_STEAM.equals(engineType)) {
+            maxHeight += fuelQuality * rocket.getFuelType().efficiency();
         } else {
-            fuelQuality = (int) Math.floor((Math.min(Constant.QUALITY_QUNISHMENT_SPLIT_VALUE - rocket.getComponentQuality(), rocket.getFuelQuality())) / 2);
-            maxHeight = rocket.getFuelType().efficiency() * rocket.getOxidantType().efficiency() * fuelQuality;
-            qualityPunishment = 2 * fuelQuality + rocket.getComponentQuality();
+            maxHeight += fuelQuality * rocket.getFuelType().efficiency() * rocket.getOxidantType().efficiency();
         }
-        double finalHeight = maxHeight - qualityPunishment;
-        result.setFinalHeight(finalHeight);
-        result.setFuelQuality(fuelQuality);
-        result.setMaxHeight(maxHeight);
-        result.setQualityPunishment(qualityPunishment);
-        result.setTotalQuality(qualityPunishment);
-        return result;
-    }
-    
-    /**
-     * 计算总质量大于4000时的结果
-     */
-    private static Result getResultMore(Rocket rocket) {
-        Result result = new Result();
-        result.setComponentQuality(rocket.getComponentQuality());
-        int minfuelQuality;
-        double maxHeight;
-        int totalQuality;
-        if (rocket.getEngineType().equals(RocketComponent.ENGINE_STEAM)) {
-            minfuelQuality = Math.min(Constant.QUALITY_QUNISHMENT_SPLIT_VALUE - rocket.getComponentQuality(), rocket.getFuelQuality() - 1) + 1;
-            maxHeight = rocket.getFuelType().efficiency() * minfuelQuality;
-            totalQuality = rocket.getComponentQuality() + minfuelQuality;
-        } else {
-            minfuelQuality = (int) Math.floor((Math.min(Constant.QUALITY_QUNISHMENT_SPLIT_VALUE - rocket.getComponentQuality(), rocket.getFuelQuality())) / 2) + 1;
-            totalQuality = rocket.getComponentQuality() + 2 * minfuelQuality;
-            maxHeight = rocket.getFuelType().efficiency() * rocket.getOxidantType().efficiency() * minfuelQuality;
+        log.debug("{}推进器总推力 = {} km", engineType.componentName(), maxHeight);
+        int ironEngineNum = rocket.getIronEngineNum();
+        int ironMaxHeight = ironEngineNum * FuelType.IRON.efficiency() * Constant.ENGINE_IRON_MAX_FUEL_QUALITY;
+        if (ironMaxHeight != 0) { 
+            log.debug("固体推进器总推力 = {} km", ironMaxHeight);
+            maxHeight += ironMaxHeight;
+            log.debug("推进器总推力 = {} km", maxHeight);
         }
-        double qualityPunishment = Math.pow((totalQuality * 1.0 / 300), 3.2);
-        double lastFinalHeight = maxHeight - qualityPunishment;
-        double maxFinalHeight = lastFinalHeight;
-        
-        result.setMaxHeight(maxHeight);
-        result.setTotalQuality(totalQuality);
-        result.setFuelQuality(minfuelQuality);
-        result.setQualityPunishment(qualityPunishment);
-        result.setFinalHeight(lastFinalHeight);
-        for (int fuelQuality = rocket.getFuelQuality(); fuelQuality > minfuelQuality; fuelQuality--) {
-            if (rocket.getEngineType().equals(RocketComponent.ENGINE_STEAM)) {
-                totalQuality = rocket.getComponentQuality() + fuelQuality;
-                maxHeight = rocket.getFuelType().efficiency() * fuelQuality;
-            } else {
-                totalQuality = rocket.getComponentQuality() + 2 * fuelQuality;
-                maxHeight = rocket.getFuelType().efficiency() * rocket.getOxidantType().efficiency() * fuelQuality;
-            }
-            qualityPunishment = Math.pow((totalQuality * 1.0 / 300), 3.2);
-            double finalHeight = maxHeight - qualityPunishment;
-            if (finalHeight > maxFinalHeight) {
-                maxFinalHeight = finalHeight;
-                result.setMaxHeight(maxHeight);
-                result.setTotalQuality(totalQuality);
-                result.setQualityPunishment(qualityPunishment);
-                result.setFinalHeight(maxFinalHeight);
-                result.setFuelQuality(fuelQuality);
-            }
-            if (finalHeight > lastFinalHeight)
-                break;
-            lastFinalHeight = finalHeight;
-        }
-        return result;
+        return maxHeight;
     }
 }

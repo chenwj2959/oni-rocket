@@ -1,5 +1,7 @@
 package com.cwj.game.oxygen.rocket.model;
 
+import com.cwj.game.oxygen.rocket.constant.Constant;
+
 public class Result {
 
     private int finalHeight;
@@ -13,6 +15,19 @@ public class Result {
     private int qualityPunishment;
     
     private int maxHeight;
+    
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(Constant.NEW_LINE)
+            .append("组件质量 = ").append(componentQuality).append(Constant.NEW_LINE)
+            .append("燃料质量 = ").append(fuelQuality).append(Constant.NEW_LINE)
+            .append("总质量 = ").append(totalQuality).append(Constant.NEW_LINE)
+            .append("质量惩罚距离 = ").append(qualityPunishment).append(Constant.NEW_LINE)
+            .append("最大推进距离 = ").append(maxHeight).append(Constant.NEW_LINE)
+            .append("最大飞行高度 = ").append(finalHeight);
+        return builder.toString();
+    }
 
     public int getFinalHeight() {
         return finalHeight;

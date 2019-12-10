@@ -19,9 +19,6 @@ public class Rocket {
     // 氧化剂仓数量
     private int oxidantBinNum;
     
-    // 推进器类型
-    private RocketComponent engineType;
-    
     // 是否有观光仓
     private boolean hasToursim;
     
@@ -34,14 +31,11 @@ public class Rocket {
     // 燃料质量
     private int fuelQuality;
     
-    // 氧化剂质量
-    private int oxidantQuality;
-    
     // 固体助推器数量
     private int ironEngineNum;
     
-    // 精炼铁质量
-    private int ironQuality;
+    // 推进器类型
+    private RocketComponent engineType;
     
     /**
      * 返回火箭主体
@@ -134,7 +128,6 @@ public class Rocket {
         if (fuelBinNum == 0) addOxidantBin(1);
         fuelBinNum = fixLimit(fuelBinNum + num, 0, 3);
         fuelQuality = fuelBinNum * Constant.FUEL_BIN_MAX_QUALITY;
-        oxidantQuality = fuelQuality;
     }
     
     /**
@@ -157,13 +150,14 @@ public class Rocket {
             this.engineType = RocketComponent.ENGINE_STEAM;
             setFuelType(FuelType.STEAM);
             fuelQuality = Constant.FUEL_BIN_MAX_QUALITY;
-            oxidantQuality = 0;
         } else if (RocketComponent.ENGINE_PETROLEUM.componentName().equals(engineStr)) {
             this.engineType = RocketComponent.ENGINE_PETROLEUM;
             setFuelType(FuelType.PETROLEUM);
+            fuelQuality = Constant.FUEL_BIN_MAX_QUALITY * fuelBinNum;
         } else if (RocketComponent.ENGINE_HYDROGEN.componentName().equals(engineStr)) {
             this.engineType = RocketComponent.ENGINE_HYDROGEN;
             setFuelType(FuelType.HYDROGEN);
+            fuelQuality = Constant.FUEL_BIN_MAX_QUALITY * fuelBinNum;
         } else if (RocketComponent.ENGINE_IRON.componentName().equals(engineStr)) {
             addIronEngine(1);
         }
@@ -236,22 +230,6 @@ public class Rocket {
 
     public void setFuelQuality(int fuelQuality) {
         this.fuelQuality = fuelQuality;
-    }
-
-    public int getOxidantQuality() {
-        return oxidantQuality;
-    }
-
-    public void setOxidantQuality(int oxidantQuality) {
-        this.oxidantQuality = oxidantQuality;
-    }
-
-    public int getIronQuality() {
-        return ironQuality;
-    }
-
-    public void setIronQuality(int ironQuality) {
-        this.ironQuality = ironQuality;
     }
 
     private int fixLimit(int curr, int min, int max) {

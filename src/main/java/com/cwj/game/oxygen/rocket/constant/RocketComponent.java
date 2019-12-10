@@ -9,7 +9,7 @@ public enum RocketComponent {
     OXIDANTBIN("氧化剂仓", 100),
     TOURISM("观光仓", 200),
     ENGINE_STEAM("蒸汽推进器", 2000),
-    ENGINE_IRON("固体推进器", 2000),
+    ENGINE_IRON("固体推进器", 200),
     ENGINE_PETROLEUM("石油推进器", 200),
     ENGINE_HYDROGEN("液氢推进器", 500);
     
