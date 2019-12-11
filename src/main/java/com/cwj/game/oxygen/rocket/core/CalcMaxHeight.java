@@ -1,19 +1,6 @@
 package com.cwj.game.oxygen.rocket.core;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-
 import com.cwj.game.oxygen.rocket.constant.Constant;
-import com.cwj.game.oxygen.rocket.constant.OxidantType;
 import com.cwj.game.oxygen.rocket.constant.RocketComponent;
 import com.cwj.game.oxygen.rocket.framework.AbstractCalculate;
 import com.cwj.game.oxygen.rocket.model.Result;
@@ -28,137 +15,68 @@ import com.cwj.game.oxygen.rocket.utils.RocketUtil;
 public class CalcMaxHeight extends AbstractCalculate {
 
     private static final long serialVersionUID = 1L;
-    
-    // 被存储的组件KEY
-    public static final String ROCKET_TEXT = "RocketText";
-    public static final String RESULT = "Result";
-    
-    public CalcMaxHeight() {
-        Dimension dimension = createLeftButton();
-        
-        // 显示火箭主体
-        JTextArea textArea = new JTextArea(RocketComponent.COMMANDER.componentName());
-        textArea.setEnabled(false);
-        JScrollPane rocketText = new JScrollPane(textArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED
-                , JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        rocketText.setBounds(MARGIN_LEFT + dimension.width, MARGIN_TOP, ROCKET_TEXT_WIDTH, dimension.height);
-        rocketText.setBorder(BorderFactory.createLineBorder(Color.BLACK));
-        this.add(rocketText);
-        put(ROCKET_TEXT, textArea);
-        
-        // 显示结果
-        JTextArea result = new JTextArea();
-        result.setLineWrap(true);
-        result.setBackground(new Color(238, 238, 238));
-        result.setEditable(false);
-        result.setBounds(MARGIN_LEFT + dimension.width + DEFAULT_WIDTH, MARGIN_TOP, RESULT_TEXT_WIDTH, dimension.height);
-        this.add(result);
-        put(RESULT, result);
-    }
-    
-    /**
-     * 生成左边的按钮
-     * @return 左边区域占的大小
-     */
-    private Dimension createLeftButton() {
-        int buttonTop = MARGIN_TOP;
-        RocketComponent[] components = RocketComponent.values();
-        for (int i = 0; i < components.length; i++) {
-            if (components[i].equals(RocketComponent.COMMANDER)) continue;
-            String componentName = components[i].componentName();
-            // label
-            JLabel label = new JLabel(componentName);
-            label.setBounds(MARGIN_LEFT, buttonTop, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-            this.add(label);
-            // "+" button
-            JButton addButton = new JButton("+");
-            addButton.setName(componentName);
-            addButton.setBounds(MARGIN_LEFT + DEFAULT_WIDTH, buttonTop, BUTTON_WIDTH, DEFAULT_HEIGHT);
-            addButton.addActionListener(addToTextAreaListener());
-            this.add(addButton);
-            // "-" button
-            JButton removeButton = new JButton("-");
-            removeButton.setName(componentName);
-            removeButton.setBounds(MARGIN_LEFT * 2 + DEFAULT_WIDTH + BUTTON_WIDTH, buttonTop, BUTTON_WIDTH, DEFAULT_HEIGHT);
-            removeButton.addActionListener(removeTextAreaLastListener());
-            this.add(removeButton);
-            
-            buttonTop += BUTTON_MARGIN_TOP + DEFAULT_HEIGHT;
+
+    @Override
+    protected Result calcResult() {
+        RocketComponent engineType = rocket.getEngineType();
+        if (engineType == null) return null;
+        Result result = new Result();
+        int componentQuality = rocket.getComponentQuality();
+        result.setComponentQuality(componentQuality);
+        result.setRocketLength(rocket.getLength());
+        int maxFuelQuality = rocket.getFuelQuality();
+        int totalQuality = RocketUtil.calcTotalQuality(rocket, maxFuelQuality);
+        if (totalQuality > Constant.QUALITY_QUNISHMENT_SPLIT_VALUE) {
+            log.debug("=== 最大总质量大于{}kg ===", Constant.QUALITY_QUNISHMENT_SPLIT_VALUE);
+            int minFuelQuality = Math.max(Constant.QUALITY_QUNISHMENT_SPLIT_VALUE - componentQuality, 0);
+            minFuelQuality = Math.min(minFuelQuality, maxFuelQuality);
+            int qualityPunishment = 0, maxHeight = 0, fuelQuality = 0, finalHeight = Integer.MIN_VALUE;
+            for (int currFuelQuality = maxFuelQuality; currFuelQuality >= minFuelQuality; currFuelQuality--) {
+                int currTotalQuality = RocketUtil.calcTotalQuality(rocket, currFuelQuality);
+                int currQualityPunishment = RocketUtil.calcQualityPunishment(currTotalQuality);
+                int currMaxHeight = RocketUtil.calcMaxHeight(rocket, currFuelQuality);
+                int currFinalHeight = currMaxHeight - currQualityPunishment;
+                if (currFinalHeight < finalHeight) break;
+                finalHeight = currFinalHeight;
+                maxHeight = currMaxHeight;
+                qualityPunishment = currQualityPunishment;
+                totalQuality = currTotalQuality;
+                fuelQuality = currFuelQuality;
+            }
+            log.debug("总质量大于{}kg时最大飞行高度为{}km", Constant.QUALITY_QUNISHMENT_SPLIT_VALUE, finalHeight);
+            // 当组件质量 < 4000, 计算燃料质量 = 4000 - 组件质量时的飞行高度
+            if (componentQuality < Constant.QUALITY_QUNISHMENT_SPLIT_VALUE) {
+                log.debug("=== 组件质量小于{}kg时 ===", Constant.QUALITY_QUNISHMENT_SPLIT_VALUE);
+                int remindFuelQuality = Math.min(Constant.QUALITY_QUNISHMENT_SPLIT_VALUE - componentQuality, Constant.FUEL_BIN_MAX_QUALITY);
+                int remindTotalQuality = remindFuelQuality + componentQuality;
+                remindFuelQuality = RocketComponent.ENGINE_STEAM.equals(rocket.getEngineType()) ? remindFuelQuality : remindFuelQuality / 2;
+                int remindMaxHeight = RocketUtil.calcMaxHeight(rocket, remindFuelQuality);
+                int remindFinalHeight = remindMaxHeight - remindTotalQuality;
+                log.debug("总质量等于{}kg时最大飞行高度为{}km", Constant.QUALITY_QUNISHMENT_SPLIT_VALUE, remindFinalHeight);
+                if (remindFinalHeight > finalHeight) {
+                    finalHeight = remindFinalHeight;
+                    maxHeight = remindMaxHeight;
+                    qualityPunishment = remindTotalQuality;
+                    totalQuality = remindTotalQuality;
+                    fuelQuality = remindTotalQuality - componentQuality;
+                }
+            }
+            result.setFinalHeight(finalHeight);
+            result.setMaxHeight(maxHeight);
+            result.setQualityPunishment(qualityPunishment);
+            result.setTotalQuality(totalQuality);
+            result.setFuelQuality(fuelQuality);
+        } else {
+            // 总质量 < 4000时
+            result.setTotalQuality(totalQuality);
+            int maxHeight = RocketUtil.calcMaxHeight(rocket, maxFuelQuality);
+            int qualityPunishment = RocketUtil.calcQualityPunishment(totalQuality);
+            result.setFuelQuality(rocket.getFuelQuality());
+            result.setMaxHeight(maxHeight);
+            result.setQualityPunishment(qualityPunishment);
+            result.setFinalHeight(maxHeight - qualityPunishment);
         }
-        // 氧化剂类型选择
-        JLabel oxidantTypeLabel = new JLabel(Constant.LABEL_OXIDANT_TYPE);
-        oxidantTypeLabel.setBounds(MARGIN_LEFT, buttonTop, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        this.add(oxidantTypeLabel);
-        String[] oxidantType = OxidantType.allValue();
-        JComboBox<String> oxidantBox = new JComboBox<>(oxidantType);
-        oxidantBox.setBounds(MARGIN_LEFT + DEFAULT_WIDTH, buttonTop, BUTTON_WIDTH * 2 + MARGIN_LEFT, DEFAULT_HEIGHT);
-        oxidantBox.addActionListener(oxidantTypeListener());
-        this.add(oxidantBox);
-        rocket.setOxidantType(oxidantType[0]);
-        return new Dimension(MARGIN_LEFT * 2 + DEFAULT_WIDTH + BUTTON_WIDTH * 2, buttonTop);
-    }
-    
-    /**
-     * 按钮的点击事件, 点击时将按钮上的文字添加到右边显示火箭主体的多行文本
-     */
-    private ActionListener addToTextAreaListener() {
-        return (ActionEvent e) -> {
-            JButton button = (JButton) e.getSource();
-            String text = button.getName();
-            rocket.addComponent(text);
-            JTextArea rocketText = (JTextArea) get(ROCKET_TEXT);
-            rocketText.setText(rocket.getRocket());
-            showResult();
-        };
-    }
-    
-    /**
-     * 按钮点击事件, 点击时从右边显示火箭主体的多行文本中突出组件
-     */
-    private ActionListener removeTextAreaLastListener() {
-        return (ActionEvent e) -> {
-            JButton button = (JButton) e.getSource();
-            String text = button.getName();
-            rocket.removeComponent(text);
-            JTextArea rocketText = (JTextArea) get(ROCKET_TEXT);
-            rocketText.setText(rocket.getRocket());
-            showResult();
-        };
-    }
-    
-    /**
-     * 氧化剂选择框监听事件
-     */
-    @SuppressWarnings("unchecked")
-    private ActionListener oxidantTypeListener() {
-        return (ActionEvent e) -> {
-            JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
-            rocket.setOxidantType(String.valueOf(comboBox.getSelectedItem()));
-            showResult();
-        };
-    }
-    
-    /**
-     * 显示结果
-     */
-    private void showResult() {
-        JTextArea resultText = (JTextArea) get(RESULT);
-        String issues = RocketUtil.checkRocket(rocket);
-        if (issues != null) {
-            resultText.setText(issues);
-            return;
-        }
-        Result result = RocketUtil.calcHeight(rocket);
-        if (result == null || result.getFinalHeight() < 10000) resultText.setText("火箭无法起飞！");
-        else {
-            StringBuilder builder = new StringBuilder();
-            builder.append("组件质量 : ").append(result.getComponentQuality()).append(" kg\n")
-                .append("燃料质量 : ").append(result.getFuelQuality()).append(" kg\n")
-                .append("总质量 : ").append(result.getTotalQuality()).append(" kg\n")
-                .append("质量惩罚 : ").append(result.getQualityPunishment()).append(" km\n")
-                .append("最大推力 : ").append(result.getMaxHeight()).append(" km\n")
-                .append("飞行高度 : ").append(result.getFinalHeight()).append(" km");
-            resultText.setText(builder.toString());
-        }
+        log.debug(result.toString());
+        return result;
     }
 }

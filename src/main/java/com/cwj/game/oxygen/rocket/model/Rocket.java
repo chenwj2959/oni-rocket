@@ -233,6 +233,13 @@ public class Rocket {
     }
     
     /**
+     * 获取火箭长度
+     */
+    public int getLength() {
+        return 1 + researchNum + wareHouseNum + fuelBinNum + oxidantBinNum + (engineType == null ? 0 : 1) + ironEngineNum + (hasToursim ? 1 : 0);
+    }
+    
+    /**
      * 根据推进器类型和燃料仓更新最大燃料质量
      */
     private void updateFuelQuality() {
