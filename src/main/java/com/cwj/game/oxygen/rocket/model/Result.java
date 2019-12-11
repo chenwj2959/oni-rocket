@@ -18,10 +18,10 @@ public class Result {
     
     private int rocketLength;
     
-    @Override
-    public String toString() {
+    public String getResult(String result) {
         StringBuilder builder = new StringBuilder();
         if (finalHeight < 10000) builder.append("火箭无法起飞！").append(Constant.NEW_LINE);
+        else if (result != null) builder.append(result).append(Constant.NEW_LINE);
         builder.append("火箭长度 = ").append(rocketLength).append("节").append(Constant.NEW_LINE)
             .append("组件质量 = ").append(componentQuality).append(" kg").append(Constant.NEW_LINE)
             .append("最佳燃料质量 = ").append(fuelQuality).append(" kg").append(Constant.NEW_LINE)

@@ -95,6 +95,8 @@ public class Rocket {
     
     /**
      * 返回火箭组件总质量
+     * <br/>
+     * 由于固体助推器无法设置燃料值, 所以将固体燃料一起算在组件质量中
      */
     public int getComponentQuality() {
         return RocketComponent.COMMANDER.quality() + (hasToursim ? RocketComponent.TOURISM.quality() : 0)
@@ -103,6 +105,7 @@ public class Rocket {
                 + RocketComponent.FUELBIN.quality() * fuelBinNum
                 + RocketComponent.OXIDANTBIN.quality() * oxidantBinNum
                 + RocketComponent.ENGINE_IRON.quality() * ironEngineNum
+                + ironEngineNum * (Constant.ENGINE_IRON_MAX_FUEL_QUALITY + Constant.ENGINE_IRON_MAX_OXIDANT_QUALITY)
                 + engineType.quality();
     }
     
@@ -186,6 +189,10 @@ public class Rocket {
 
     public int getOxidantBinNum() {
         return oxidantBinNum;
+    }
+
+    public void setIronEngineNum(int ironEngineNum) {
+        this.ironEngineNum = ironEngineNum;
     }
 
     public int getIronEngineNum() {

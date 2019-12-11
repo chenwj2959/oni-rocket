@@ -25,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import com.cwj.game.oxygen.rocket.constant.Constant;
 import com.cwj.game.oxygen.rocket.constant.OxidantType;
 import com.cwj.game.oxygen.rocket.constant.RocketComponent;
-import com.cwj.game.oxygen.rocket.model.Result;
 import com.cwj.game.oxygen.rocket.model.Rocket;
 import com.cwj.game.oxygen.rocket.utils.RocketUtil;
 
@@ -139,8 +138,7 @@ public abstract class AbstractCalculate extends JPanel {
             JButton button = (JButton) e.getSource();
             String text = button.getName();
             rocket.addComponent(text);
-            JTextArea rocketText = (JTextArea) get(ROCKET_TEXT);
-            rocketText.setText(rocket.getRocket());
+            showRocket();
             showResult();
         };
     }
@@ -153,10 +151,14 @@ public abstract class AbstractCalculate extends JPanel {
             JButton button = (JButton) e.getSource();
             String text = button.getName();
             rocket.removeComponent(text);
-            JTextArea rocketText = (JTextArea) get(ROCKET_TEXT);
-            rocketText.setText(rocket.getRocket());
+            showRocket();
             showResult();
         };
+    }
+    
+    protected void showRocket() {
+        JTextArea rocketText = (JTextArea) get(ROCKET_TEXT);
+        rocketText.setText(rocket.getRocket());
     }
     
     /**
@@ -174,22 +176,22 @@ public abstract class AbstractCalculate extends JPanel {
     /**
      * 显示结果
      */
-    private void showResult() {
+    protected void showResult() {
         JTextArea resultText = (JTextArea) get(RESULT);
         String issues = RocketUtil.checkRocket(rocket);
         if (issues != null) {
             resultText.setText(issues);
             return;
         }
-        Result result = calcResult();
+        String result = calcResult();
         if (result == null) resultText.setText("火箭无法起飞！");
-        else resultText.setText(result.toString());
+        else resultText.setText(result);
     }
     
     /**
      * 计算结果
      */
-    protected abstract Result calcResult();
+    protected abstract String calcResult();
     
     public void put(String key, Component component) {
         componentMap.put(key, component);
