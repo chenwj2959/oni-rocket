@@ -63,7 +63,7 @@ public abstract class AbstractCalculate extends JPanel {
         leftIgnoreList = new ArrayList<>();
         leftIgnoreList.add(RocketComponent.COMMANDER);
         leftIgnoreList.add(RocketComponent.OXIDANTBIN);
-        if (ignoreComponents != null && ignoreComponents.length > 0) leftIgnoreList.addAll(Arrays.asList(ignoreComponents));
+        if (ignoreComponents.length > 0) leftIgnoreList.addAll(Arrays.asList(ignoreComponents));
         
         Dimension dimension = createLeftButton();
         

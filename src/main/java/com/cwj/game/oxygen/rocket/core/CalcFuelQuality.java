@@ -12,6 +12,9 @@ import com.cwj.game.oxygen.rocket.framework.AbstractCalculate;
 import com.cwj.game.oxygen.rocket.model.Result;
 import com.cwj.game.oxygen.rocket.utils.RocketUtil;
 
+/**
+ * 计算火箭到达目标高度最佳的燃料质量
+ */
 public class CalcFuelQuality extends AbstractCalculate {
 
     private static final long serialVersionUID = 1L;
