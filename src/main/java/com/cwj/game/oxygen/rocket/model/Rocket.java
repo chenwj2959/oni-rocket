@@ -87,7 +87,7 @@ public class Rocket {
         } else if (RocketComponent.TOURISM.componentName().equals(component)) {
             setHasToursim(false);
         } else if (engineType != null && engineType.componentName().equals(component)) {
-            engineType = null;
+            setEngineType(null);
         } else {
             addIronEngine(-1);
         }
@@ -127,7 +127,7 @@ public class Rocket {
     public void addFuelBin(int num) {
         if (fuelBinNum == 0) addOxidantBin(1);
         fuelBinNum = fixLimit(fuelBinNum + num, 0, 3);
-        fuelQuality = fuelBinNum * Constant.FUEL_BIN_MAX_QUALITY;
+        updateFuelQuality();
     }
     
     /**
@@ -145,26 +145,26 @@ public class Rocket {
         if (ironEngineNum < 0) ironEngineNum = 0;
     }
     
+    /**
+     * 设置推进器
+     */
     public void setEngineType(String engineStr) {
-        if (RocketComponent.ENGINE_STEAM.componentName().equals(engineStr)) {
+        if (engineStr == null) {
+            this.engineType = null;
+            return;
+        } else if (RocketComponent.ENGINE_STEAM.componentName().equals(engineStr)) {
             this.engineType = RocketComponent.ENGINE_STEAM;
             setFuelType(FuelType.STEAM);
-            fuelQuality = Constant.FUEL_BIN_MAX_QUALITY;
         } else if (RocketComponent.ENGINE_PETROLEUM.componentName().equals(engineStr)) {
             this.engineType = RocketComponent.ENGINE_PETROLEUM;
             setFuelType(FuelType.PETROLEUM);
-            fuelQuality = Constant.FUEL_BIN_MAX_QUALITY * fuelBinNum;
         } else if (RocketComponent.ENGINE_HYDROGEN.componentName().equals(engineStr)) {
             this.engineType = RocketComponent.ENGINE_HYDROGEN;
             setFuelType(FuelType.HYDROGEN);
-            fuelQuality = Constant.FUEL_BIN_MAX_QUALITY * fuelBinNum;
         } else if (RocketComponent.ENGINE_IRON.componentName().equals(engineStr)) {
             addIronEngine(1);
         }
-    }
-    
-    public void setEngineType(RocketComponent engineType) {
-        setEngineType(engineType.componentName());
+        updateFuelQuality();
     }
 
     public RocketComponent getEngineType() {
@@ -230,6 +230,13 @@ public class Rocket {
 
     public void setFuelQuality(int fuelQuality) {
         this.fuelQuality = fuelQuality;
+    }
+    
+    /**
+     * 根据推进器类型和燃料仓更新最大燃料质量
+     */
+    private void updateFuelQuality() {
+        this.fuelQuality = RocketComponent.ENGINE_STEAM.equals(engineType) ? Constant.FUEL_BIN_MAX_QUALITY : Constant.FUEL_BIN_MAX_QUALITY * fuelBinNum;
     }
 
     private int fixLimit(int curr, int min, int max) {

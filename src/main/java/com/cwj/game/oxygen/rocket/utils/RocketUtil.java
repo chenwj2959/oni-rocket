@@ -30,10 +30,11 @@ public class RocketUtil {
         int maxFuelQuality = rocket.getFuelQuality();
         int totalQuality = calcTotalQuality(rocket, maxFuelQuality);
         if (totalQuality > Constant.QUALITY_QUNISHMENT_SPLIT_VALUE) {
+            log.debug("=== 最大总质量大于{}kg ===", Constant.QUALITY_QUNISHMENT_SPLIT_VALUE);
             int minFuelQuality = Math.max(Constant.QUALITY_QUNISHMENT_SPLIT_VALUE - componentQuality, 0);
             minFuelQuality = Math.min(minFuelQuality, maxFuelQuality);
             int qualityPunishment = 0, maxHeight = 0, fuelQuality = 0, finalHeight = Integer.MIN_VALUE;
-            for (int currFuelQuality = maxFuelQuality; currFuelQuality > minFuelQuality; currFuelQuality--) {
+            for (int currFuelQuality = maxFuelQuality; currFuelQuality >= minFuelQuality; currFuelQuality--) {
                 int currTotalQuality = calcTotalQuality(rocket, currFuelQuality);
                 int currQualityPunishment = calcQualityPunishment(currTotalQuality);
                 int currMaxHeight = calcMaxHeight(rocket, currFuelQuality);
@@ -45,13 +46,16 @@ public class RocketUtil {
                 totalQuality = currTotalQuality;
                 fuelQuality = currFuelQuality;
             }
+            log.debug("总质量大于{}kg时最大飞行高度为{}km", Constant.QUALITY_QUNISHMENT_SPLIT_VALUE, finalHeight);
             // 当组件质量 < 4000, 计算燃料质量 = 4000 - 组件质量时的飞行高度
             if (componentQuality < Constant.QUALITY_QUNISHMENT_SPLIT_VALUE) {
+                log.debug("=== 组件质量小于{}kg时 ===", Constant.QUALITY_QUNISHMENT_SPLIT_VALUE);
                 int remindFuelQuality = Math.min(Constant.QUALITY_QUNISHMENT_SPLIT_VALUE - componentQuality, Constant.FUEL_BIN_MAX_QUALITY);
                 int remindTotalQuality = remindFuelQuality + componentQuality;
                 remindFuelQuality = RocketComponent.ENGINE_STEAM.equals(rocket.getEngineType()) ? remindFuelQuality : remindFuelQuality / 2;
                 int remindMaxHeight = calcMaxHeight(rocket, remindFuelQuality);
                 int remindFinalHeight = remindMaxHeight - remindTotalQuality;
+                log.debug("总质量等于{}kg时最大飞行高度为{}km", Constant.QUALITY_QUNISHMENT_SPLIT_VALUE, remindFinalHeight);
                 if (remindFinalHeight > finalHeight) {
                     finalHeight = remindFinalHeight;
                     maxHeight = remindMaxHeight;
