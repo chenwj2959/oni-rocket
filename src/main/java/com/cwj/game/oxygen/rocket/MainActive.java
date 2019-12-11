@@ -11,7 +11,7 @@ public class MainActive {
     
     public static void main(String[] args) {
         JFrame windows = new JFrame("RP缺氧火箭计算器");
-        windows.setSize(550, 450);
+        windows.setSize(550, 425);
         windows.setLocationRelativeTo(null);
         windows.setResizable(false);
         windows.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

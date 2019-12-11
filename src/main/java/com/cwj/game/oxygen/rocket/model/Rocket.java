@@ -127,6 +127,7 @@ public class Rocket {
     public void addFuelBin(int num) {
         if (fuelBinNum == 0) addOxidantBin(1);
         fuelBinNum = fixLimit(fuelBinNum + num, 0, 3);
+        if (fuelBinNum == 0) addOxidantBin(-1);
         updateFuelQuality();
     }
     

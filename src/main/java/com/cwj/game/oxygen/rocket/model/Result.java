@@ -21,9 +21,10 @@ public class Result {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
+        if (finalHeight < 10000) builder.append("火箭无法起飞！").append(Constant.NEW_LINE);
         builder.append("火箭长度 = ").append(rocketLength).append("节").append(Constant.NEW_LINE)
             .append("组件质量 = ").append(componentQuality).append(" kg").append(Constant.NEW_LINE)
-            .append("燃料质量 = ").append(fuelQuality).append(" kg").append(Constant.NEW_LINE)
+            .append("最佳燃料质量 = ").append(fuelQuality).append(" kg").append(Constant.NEW_LINE)
             .append("总质量 = ").append(totalQuality).append(" kg").append(Constant.NEW_LINE)
             .append("质量惩罚距离 = ").append(qualityPunishment).append(" km").append(Constant.NEW_LINE)
             .append("最大推进距离 = ").append(maxHeight).append(" km").append(Constant.NEW_LINE)

@@ -5,7 +5,10 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -52,11 +55,16 @@ public abstract class AbstractCalculate extends JPanel {
     
     private HashMap<String, Component> componentMap;
     protected Rocket rocket;
+    private List<RocketComponent> leftIgnoreList;
     
-    public AbstractCalculate() {
+    public AbstractCalculate(RocketComponent... ignoreComponents) {
         this.setLayout(null);
         componentMap = new HashMap<>();
         rocket = new Rocket();
+        leftIgnoreList = new ArrayList<>();
+        leftIgnoreList.add(RocketComponent.COMMANDER);
+        leftIgnoreList.add(RocketComponent.OXIDANTBIN);
+        if (ignoreComponents != null && ignoreComponents.length > 0) leftIgnoreList.addAll(Arrays.asList(ignoreComponents));
         
         Dimension dimension = createLeftButton();
         
@@ -89,7 +97,7 @@ public abstract class AbstractCalculate extends JPanel {
         RocketComponent[] components = RocketComponent.values();
         for (int i = 0; i < components.length; i++) {
             // 不显示指挥舱和氧化剂仓
-            if (components[i].equals(RocketComponent.COMMANDER) || components[i].equals(RocketComponent.OXIDANTBIN)) continue;
+            if (isIgnore(components[i])) continue;
             String componentName = components[i].componentName();
             // label
             JLabel label = new JLabel(componentName);
@@ -174,7 +182,7 @@ public abstract class AbstractCalculate extends JPanel {
             return;
         }
         Result result = calcResult();
-        if (result == null || result.getFinalHeight() < 10000) resultText.setText("火箭无法起飞！");
+        if (result == null) resultText.setText("火箭无法起飞！");
         else resultText.setText(result.toString());
     }
     
@@ -195,5 +203,12 @@ public abstract class AbstractCalculate extends JPanel {
         for (Map.Entry<String, Component> component : componentMap.entrySet()) {
             component.getValue().setEnabled(flag);
         }
+    }
+    
+    /**
+     * 左边区域忽略的组件
+     */
+    private boolean isIgnore(RocketComponent rocketComponent) {
+        return leftIgnoreList.contains(rocketComponent);
     }
 }

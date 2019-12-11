@@ -36,6 +36,7 @@ public class CalcMaxHeight extends AbstractCalculate {
                 int currQualityPunishment = RocketUtil.calcQualityPunishment(currTotalQuality);
                 int currMaxHeight = RocketUtil.calcMaxHeight(rocket, currFuelQuality);
                 int currFinalHeight = currMaxHeight - currQualityPunishment;
+                log.debug("总质量{}kg燃料质量{}kg时最大飞行高度为{}km, 上次飞行高度为{}km", currTotalQuality, currFuelQuality, currFinalHeight, finalHeight);
                 if (currFinalHeight < finalHeight) break;
                 finalHeight = currFinalHeight;
                 maxHeight = currMaxHeight;
@@ -43,7 +44,7 @@ public class CalcMaxHeight extends AbstractCalculate {
                 totalQuality = currTotalQuality;
                 fuelQuality = currFuelQuality;
             }
-            log.debug("总质量大于{}kg时最大飞行高度为{}km", Constant.QUALITY_QUNISHMENT_SPLIT_VALUE, finalHeight);
+            log.debug("总质量大于{}kg时最终飞行高度为{}km", Constant.QUALITY_QUNISHMENT_SPLIT_VALUE, finalHeight);
             // 当组件质量 < 4000, 计算燃料质量 = 4000 - 组件质量时的飞行高度
             if (componentQuality < Constant.QUALITY_QUNISHMENT_SPLIT_VALUE) {
                 log.debug("=== 组件质量小于{}kg时 ===", Constant.QUALITY_QUNISHMENT_SPLIT_VALUE);

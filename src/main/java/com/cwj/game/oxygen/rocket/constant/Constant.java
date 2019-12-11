@@ -7,6 +7,8 @@ public class Constant {
     
     public static final String LABEL_OXIDANT_TYPE = "氧化剂类型";
     
+    public static final String LABEL_FINAL_HEIGHT = "飞行高度";
+    
     // 质量惩罚公式分割点
     public static final int QUALITY_QUNISHMENT_SPLIT_VALUE = 4000;
     
