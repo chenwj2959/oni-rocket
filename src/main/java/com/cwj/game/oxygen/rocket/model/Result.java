@@ -18,12 +18,29 @@ public class Result {
     
     private int rocketLength;
     
+    private int maxLoadQuality;
+    
     public String getResult(String result) {
         StringBuilder builder = new StringBuilder();
         if (finalHeight < 10000) builder.append("火箭无法起飞！").append(Constant.NEW_LINE);
         else if (result != null) builder.append(result).append(Constant.NEW_LINE);
         builder.append("火箭长度 = ").append(rocketLength).append("节").append(Constant.NEW_LINE)
             .append("组件质量 = ").append(componentQuality).append(" kg").append(Constant.NEW_LINE)
+            .append("最佳燃料质量 = ").append(fuelQuality).append(" kg").append(Constant.NEW_LINE)
+            .append("总质量 = ").append(totalQuality).append(" kg").append(Constant.NEW_LINE)
+            .append("质量惩罚距离 = ").append(qualityPunishment).append(" km").append(Constant.NEW_LINE)
+            .append("最大推进距离 = ").append(maxHeight).append(" km").append(Constant.NEW_LINE)
+            .append("最大飞行高度 = ").append(finalHeight).append(" km");
+        return builder.toString();
+    }
+    
+    public String getMaxLoadResult(String result) {
+        StringBuilder builder = new StringBuilder();
+        if (finalHeight < 10000) builder.append("火箭无法起飞！").append(Constant.NEW_LINE);
+        else if (result != null) builder.append(result).append(Constant.NEW_LINE);
+        builder.append("火箭长度 = ").append(rocketLength).append("节").append(Constant.NEW_LINE)
+            .append("组件质量 = ").append(componentQuality).append(" kg").append(Constant.NEW_LINE)
+            .append("最大可负载质量 = ").append(maxLoadQuality).append(" kg").append(Constant.NEW_LINE)
             .append("最佳燃料质量 = ").append(fuelQuality).append(" kg").append(Constant.NEW_LINE)
             .append("总质量 = ").append(totalQuality).append(" kg").append(Constant.NEW_LINE)
             .append("质量惩罚距离 = ").append(qualityPunishment).append(" km").append(Constant.NEW_LINE)
@@ -86,5 +103,9 @@ public class Result {
 
     public void setRocketLength(int rocketLength) {
         this.rocketLength = rocketLength;
+    }
+
+    public void setMaxLoadQuality(int maxLoadQuality) {
+        this.maxLoadQuality = maxLoadQuality;
     }
 }

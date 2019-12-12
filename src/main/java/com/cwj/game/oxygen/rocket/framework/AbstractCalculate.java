@@ -37,7 +37,7 @@ public abstract class AbstractCalculate extends JPanel {
     public static final int MARGIN_TOP = 25;
     public static final int MARGIN_LEFT = 20;
     
-    public static final int DEFAULT_WIDTH = 100;
+    public static final int DEFAULT_WIDTH = 125;
     public static final int DEFAULT_HEIGHT = 25;
     
     public static final int BUTTON_MARGIN_TOP = 10;
@@ -51,12 +51,13 @@ public abstract class AbstractCalculate extends JPanel {
     // 被存储的组件KEY
     public static final String ROCKET_TEXT = "RocketText";
     public static final String RESULT = "Result";
+    public static final String FINAL_HEIGHT_BOX = "finalHeightBox";
     
     private HashMap<String, Component> componentMap;
     protected Rocket rocket;
     private List<RocketComponent> leftIgnoreList;
     
-    public AbstractCalculate(RocketComponent... ignoreComponents) {
+    public AbstractCalculate(boolean addFinalHeight, RocketComponent... ignoreComponents) {
         this.setLayout(null);
         componentMap = new HashMap<>();
         rocket = new Rocket();
@@ -65,7 +66,7 @@ public abstract class AbstractCalculate extends JPanel {
         leftIgnoreList.add(RocketComponent.OXIDANTBIN);
         if (ignoreComponents.length > 0) leftIgnoreList.addAll(Arrays.asList(ignoreComponents));
         
-        Dimension dimension = createLeftButton();
+        Dimension dimension = createLeftButton(addFinalHeight);
         
         // 显示火箭主体
         JTextArea textArea = new JTextArea(RocketComponent.COMMANDER.componentName());
@@ -82,7 +83,7 @@ public abstract class AbstractCalculate extends JPanel {
         result.setLineWrap(true);
         result.setBackground(new Color(238, 238, 238));
         result.setEditable(false);
-        result.setBounds(MARGIN_LEFT + dimension.width + DEFAULT_WIDTH, MARGIN_TOP, RESULT_TEXT_WIDTH, dimension.height);
+        result.setBounds(MARGIN_LEFT * 2 + dimension.width + ROCKET_TEXT_WIDTH, MARGIN_TOP, RESULT_TEXT_WIDTH, dimension.height);
         this.add(result);
         put(RESULT, result);
     }
@@ -91,7 +92,7 @@ public abstract class AbstractCalculate extends JPanel {
      * 生成左边的按钮
      * @return 左边区域占的大小
      */
-    protected Dimension createLeftButton() {
+    protected Dimension createLeftButton(boolean addFinalHeight) {
         int buttonTop = MARGIN_TOP;
         RocketComponent[] components = RocketComponent.values();
         for (int i = 0; i < components.length; i++) {
@@ -99,7 +100,8 @@ public abstract class AbstractCalculate extends JPanel {
             if (isIgnore(components[i])) continue;
             String componentName = components[i].componentName();
             // label
-            JLabel label = new JLabel(componentName);
+            String labelStr = componentName + "(" + components[i].quality() + "kg)";
+            JLabel label = new JLabel(labelStr);
             label.setBounds(MARGIN_LEFT, buttonTop, DEFAULT_WIDTH, DEFAULT_HEIGHT);
             this.add(label);
             // "+" button
@@ -127,6 +129,22 @@ public abstract class AbstractCalculate extends JPanel {
         oxidantBox.addActionListener(oxidantTypeListener());
         this.add(oxidantBox);
         rocket.setOxidantType(oxidantType[0]);
+        // 目标高度
+        if (addFinalHeight) {
+            buttonTop += BUTTON_MARGIN_TOP + DEFAULT_HEIGHT;
+            JLabel finalHeightLabel = new JLabel(Constant.LABEL_FINAL_HEIGHT);
+            finalHeightLabel.setBounds(MARGIN_LEFT, buttonTop, DEFAULT_WIDTH, DEFAULT_HEIGHT);
+            this.add(finalHeightLabel);
+            Integer[] heightArray = new Integer[19];
+            for (int i = 0; i < 19; i++) {
+                heightArray[i] = 10000 * (i + 1);
+            }
+            JComboBox<Integer> finalHeightBox = new JComboBox<Integer>(heightArray);
+            finalHeightBox.setBounds(MARGIN_LEFT + DEFAULT_WIDTH, buttonTop, BUTTON_WIDTH * 2 + MARGIN_LEFT, DEFAULT_HEIGHT);
+            finalHeightBox.addActionListener((ActionEvent e) -> showResult());
+            this.add(finalHeightBox);
+            put(FINAL_HEIGHT_BOX, finalHeightBox);
+        }
         return new Dimension(MARGIN_LEFT * 2 + DEFAULT_WIDTH + BUTTON_WIDTH * 2, buttonTop);
     }
     

@@ -1,10 +1,6 @@
 package com.cwj.game.oxygen.rocket.core;
 
-import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-
 import javax.swing.JComboBox;
-import javax.swing.JLabel;
 
 import com.cwj.game.oxygen.rocket.constant.Constant;
 import com.cwj.game.oxygen.rocket.constant.RocketComponent;
@@ -18,32 +14,10 @@ import com.cwj.game.oxygen.rocket.utils.RocketUtil;
 public class CalcFuelQuality extends AbstractCalculate {
 
     private static final long serialVersionUID = 1L;
-    private static final String FINAL_HEIGHT_BOX = "finalHeightBox";
-    
     public CalcFuelQuality() {
-        super(RocketComponent.ENGINE_IRON);
+        super(true, RocketComponent.ENGINE_IRON);
     }
     
-    @Override
-    protected Dimension createLeftButton() {
-        Dimension dimension = super.createLeftButton();
-        int buttonTop = BUTTON_MARGIN_TOP + DEFAULT_HEIGHT + dimension.height;
-        JLabel finalHeightLabel = new JLabel(Constant.LABEL_FINAL_HEIGHT);
-        finalHeightLabel.setBounds(MARGIN_LEFT, buttonTop, DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        this.add(finalHeightLabel);
-        Integer[] heightArray = new Integer[19];
-        for (int i = 0; i < 19; i++) {
-            heightArray[i] = 10000 * (i + 1);
-        }
-        JComboBox<Integer> finalHeightBox = new JComboBox<Integer>(heightArray);
-        finalHeightBox.setBounds(MARGIN_LEFT + DEFAULT_WIDTH, buttonTop, dimension.width - MARGIN_LEFT - DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        finalHeightBox.addActionListener((ActionEvent e) -> showResult());
-        this.add(finalHeightBox);
-        put(FINAL_HEIGHT_BOX, finalHeightBox);
-        dimension.height = buttonTop;
-        return dimension;
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     protected String calcResult() {

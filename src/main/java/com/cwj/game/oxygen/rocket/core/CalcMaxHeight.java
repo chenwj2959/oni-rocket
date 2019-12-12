@@ -13,6 +13,10 @@ import com.cwj.game.oxygen.rocket.utils.RocketUtil;
 public class CalcMaxHeight extends AbstractCalculate {
 
     private static final long serialVersionUID = 1L;
+    
+    public CalcMaxHeight() {
+        super(false);
+    }
 
     @Override
     protected String calcResult() {
