@@ -5,6 +5,7 @@ import javax.swing.JTabbedPane;
 
 import com.cwj.game.oxygen.rocket.core.CalcFuelQuality;
 import com.cwj.game.oxygen.rocket.core.CalcMaxHeight;
+import com.cwj.game.oxygen.rocket.core.CalcMaxLoad;
 
 public class MainActive {
     
@@ -19,7 +20,7 @@ public class MainActive {
         JTabbedPane tab = new JTabbedPane();
         tab.add("计算最大高度", new CalcMaxHeight());
         tab.add("计算燃料质量", new CalcFuelQuality());
-//        tab.add("计算最大负载", new CalcMaxLoad());
+        tab.add("计算最大负载", new CalcMaxLoad());
         
         windows.setContentPane(tab);
         windows.setVisible(true);

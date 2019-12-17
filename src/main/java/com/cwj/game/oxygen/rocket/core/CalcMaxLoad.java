@@ -21,6 +21,7 @@ public class CalcMaxLoad extends AbstractCalculate {
     @SuppressWarnings("unchecked")
     @Override
     protected String calcResult() {
+        int researchNum = 0, warehouseNum = 0;
         Result maxFinalHeightResult = RocketUtil.calcMaxFinalHeight(rocket);
         if (maxFinalHeightResult == null) return null;
         // 获取目标值
@@ -29,6 +30,15 @@ public class CalcMaxLoad extends AbstractCalculate {
         if (maxFinalHeightResult.getFinalHeight() < finalHeight) {
             return maxFinalHeightResult.getResult("火箭无法到达" + finalHeight + " km");
         }
-        return null;
+        Result result = null;
+        while (researchNum < 5) {
+            rocket.addResearch(1);
+            Result currResult = RocketUtil.calcMaxFinalHeight(rocket);
+            if (currResult == null) return result == null ? "火箭无法负载其它组件！" : result.getResult("最多能负载 " + researchNum + "个研究仓");
+            result = currResult;
+            researchNum++;
+        }
+        showRocket();
+        return result.getResult("最多能负载 " + researchNum + "个研究仓");
     }
 }
