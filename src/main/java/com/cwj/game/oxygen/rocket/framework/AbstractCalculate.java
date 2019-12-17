@@ -40,11 +40,11 @@ public abstract class AbstractCalculate extends JPanel {
     public static final int DEFAULT_WIDTH = 125;
     public static final int DEFAULT_HEIGHT = 25;
     
-    public static final int BUTTON_MARGIN_TOP = 10;
+    public static final int BUTTON_MARGIN = 10;
     public static final int BUTTON_WIDTH = 50;
     
     // 显示火箭主体文本宽度
-    public static final int ROCKET_TEXT_WIDTH = 80;
+    public static final int ROCKET_TEXT_WIDTH = 140;
     // 显示结果文本宽度
     public static final int RESULT_TEXT_WIDTH = 150;
     
@@ -52,6 +52,7 @@ public abstract class AbstractCalculate extends JPanel {
     public static final String ROCKET_TEXT = "RocketText";
     public static final String RESULT = "Result";
     public static final String FINAL_HEIGHT_BOX = "finalHeightBox";
+    public static final String OXIDANT_TYPE = "oxidantType";
     
     private HashMap<String, Component> componentMap;
     protected Rocket rocket;
@@ -77,13 +78,24 @@ public abstract class AbstractCalculate extends JPanel {
         rocketText.setBorder(BorderFactory.createLineBorder(Color.BLACK));
         this.add(rocketText);
         put(ROCKET_TEXT, textArea);
+        // 复制/粘贴按钮
+        int btnWidth = (ROCKET_TEXT_WIDTH - BUTTON_MARGIN) / 2;
+        JButton copyBtn = new JButton("复制");
+        copyBtn.setBounds(MARGIN_LEFT + dimension.width, MARGIN_TOP + BUTTON_MARGIN + dimension.height, btnWidth, DEFAULT_HEIGHT);
+        copyBtn.addActionListener(copyListener());
+        this.add(copyBtn);
+        
+        JButton pasteBtn = new JButton("粘贴");
+        pasteBtn.setBounds(MARGIN_LEFT + BUTTON_MARGIN + dimension.width + btnWidth, MARGIN_TOP + BUTTON_MARGIN + dimension.height, btnWidth, DEFAULT_HEIGHT);
+        pasteBtn.addActionListener(pasteListener());
+        this.add(pasteBtn);
         
         // 显示结果
         JTextArea result = new JTextArea();
         result.setLineWrap(true);
         result.setBackground(new Color(238, 238, 238));
         result.setEditable(false);
-        result.setBounds(MARGIN_LEFT * 2 + dimension.width + ROCKET_TEXT_WIDTH, MARGIN_TOP, RESULT_TEXT_WIDTH, dimension.height);
+        result.setBounds(MARGIN_LEFT + BUTTON_MARGIN + dimension.width + ROCKET_TEXT_WIDTH, MARGIN_TOP, RESULT_TEXT_WIDTH, dimension.height);
         this.add(result);
         put(RESULT, result);
     }
@@ -117,7 +129,7 @@ public abstract class AbstractCalculate extends JPanel {
             removeButton.addActionListener(removeTextAreaLastListener());
             this.add(removeButton);
             
-            buttonTop += BUTTON_MARGIN_TOP + DEFAULT_HEIGHT;
+            buttonTop += BUTTON_MARGIN + DEFAULT_HEIGHT;
         }
         // 氧化剂类型选择
         JLabel oxidantTypeLabel = new JLabel(Constant.LABEL_OXIDANT_TYPE);
@@ -128,10 +140,11 @@ public abstract class AbstractCalculate extends JPanel {
         oxidantBox.setBounds(MARGIN_LEFT + DEFAULT_WIDTH, buttonTop, BUTTON_WIDTH * 2 + MARGIN_LEFT, DEFAULT_HEIGHT);
         oxidantBox.addActionListener(oxidantTypeListener());
         this.add(oxidantBox);
+        put(OXIDANT_TYPE, oxidantBox);
         rocket.setOxidantType(oxidantType[0]);
         // 目标高度
         if (addFinalHeight) {
-            buttonTop += BUTTON_MARGIN_TOP + DEFAULT_HEIGHT;
+            buttonTop += BUTTON_MARGIN + DEFAULT_HEIGHT;
             JLabel finalHeightLabel = new JLabel(Constant.LABEL_FINAL_HEIGHT);
             finalHeightLabel.setBounds(MARGIN_LEFT, buttonTop, DEFAULT_WIDTH, DEFAULT_HEIGHT);
             this.add(finalHeightLabel);
@@ -141,7 +154,10 @@ public abstract class AbstractCalculate extends JPanel {
             }
             JComboBox<Integer> finalHeightBox = new JComboBox<Integer>(heightArray);
             finalHeightBox.setBounds(MARGIN_LEFT + DEFAULT_WIDTH, buttonTop, BUTTON_WIDTH * 2 + MARGIN_LEFT, DEFAULT_HEIGHT);
-            finalHeightBox.addActionListener((ActionEvent e) -> showResult());
+            finalHeightBox.addActionListener((ActionEvent e) -> {
+                rocket.setTargetHeight((int) finalHeightBox.getSelectedItem()); 
+                showResult();
+            });
             this.add(finalHeightBox);
             put(FINAL_HEIGHT_BOX, finalHeightBox);
         }
@@ -189,6 +205,38 @@ public abstract class AbstractCalculate extends JPanel {
             rocket.setOxidantType(String.valueOf(comboBox.getSelectedItem()));
             showResult();
         };
+    }
+    
+    /**
+     * 复制按钮监听事件
+     */
+    private ActionListener copyListener() {
+        return (ActionEvent e) -> {
+            Rocket.copy(rocket);
+        };
+    }
+    
+    /**
+     * 粘贴按钮监听事件
+     */
+    private ActionListener pasteListener() {
+        return (ActionEvent e) -> {
+            Rocket clipboard = Rocket.paste();
+            if (clipboard != null) rocket = clipboard;
+            showRocket();
+            updateLeftButton();
+            showResult();
+        };
+    }
+    
+    /**
+     * 更新左边区域
+     */
+    private void updateLeftButton() {
+        JComboBox<?> oxidantBox = (JComboBox<?>) get(OXIDANT_TYPE);
+        if (oxidantBox != null) oxidantBox.setSelectedItem(rocket.getOxidantType().chiness());
+        JComboBox<?> finalHeightBox = (JComboBox<?>) get(FINAL_HEIGHT_BOX);
+        if (finalHeightBox != null) finalHeightBox.setSelectedItem(rocket.getTargetHeight());
     }
     
     /**

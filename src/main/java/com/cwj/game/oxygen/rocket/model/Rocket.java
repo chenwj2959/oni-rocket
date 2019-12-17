@@ -5,7 +5,10 @@ import com.cwj.game.oxygen.rocket.constant.FuelType;
 import com.cwj.game.oxygen.rocket.constant.OxidantType;
 import com.cwj.game.oxygen.rocket.constant.RocketComponent;
 
-public class Rocket {
+public class Rocket implements Cloneable {
+    
+    // 剪切板
+    private static Rocket clipboard;
 
     // 研究仓数量
     private int researchNum;
@@ -36,6 +39,23 @@ public class Rocket {
     
     // 推进器类型
     private RocketComponent engineType;
+    
+    // 目标高度
+    private int targetHeight;
+    
+    /**
+     * 复制到剪切板
+     */
+    public static void copy(Rocket rocket) {
+        clipboard = (Rocket) rocket.clone();
+    }
+    
+    /**
+     * 从剪切板粘贴
+     */
+    public static Rocket paste() {
+        return clipboard;
+    }
     
     /**
      * 返回火箭主体
@@ -87,7 +107,7 @@ public class Rocket {
         } else if (RocketComponent.TOURISM.componentName().equals(component)) {
             setHasToursim(false);
         } else if (engineType != null && engineType.componentName().equals(component)) {
-            setEngineType(null);
+            this.engineType = null;
         } else {
             addIronEngine(-1);
         }
@@ -107,6 +127,35 @@ public class Rocket {
                 + RocketComponent.ENGINE_IRON.quality() * ironEngineNum
                 + ironEngineNum * (Constant.ENGINE_IRON_MAX_FUEL_QUALITY + Constant.ENGINE_IRON_MAX_OXIDANT_QUALITY)
                 + engineType.quality();
+    }
+    
+    /**
+     * 设置推进器
+     */
+    public void setEngineType(String engineStr) {
+        if (engineStr == null) {
+            this.engineType = null;
+            return;
+        } else if (RocketComponent.ENGINE_STEAM.componentName().equals(engineStr)) {
+            this.engineType = RocketComponent.ENGINE_STEAM;
+            setFuelType(FuelType.STEAM);
+        } else if (RocketComponent.ENGINE_PETROLEUM.componentName().equals(engineStr)) {
+            this.engineType = RocketComponent.ENGINE_PETROLEUM;
+            setFuelType(FuelType.PETROLEUM);
+        } else if (RocketComponent.ENGINE_HYDROGEN.componentName().equals(engineStr)) {
+            this.engineType = RocketComponent.ENGINE_HYDROGEN;
+            setFuelType(FuelType.HYDROGEN);
+        } else if (RocketComponent.ENGINE_IRON.componentName().equals(engineStr)) {
+            addIronEngine(1);
+        }
+        updateFuelQuality();
+    }
+
+    /**
+     * 获取火箭长度
+     */
+    public int getLength() {
+        return 1 + researchNum + wareHouseNum + fuelBinNum + oxidantBinNum + (engineType == null ? 0 : 1) + ironEngineNum + (hasToursim ? 1 : 0);
     }
     
     /**
@@ -149,72 +198,6 @@ public class Rocket {
         if (ironEngineNum < 0) ironEngineNum = 0;
     }
     
-    /**
-     * 设置推进器
-     */
-    public void setEngineType(String engineStr) {
-        if (engineStr == null) {
-            this.engineType = null;
-            return;
-        } else if (RocketComponent.ENGINE_STEAM.componentName().equals(engineStr)) {
-            this.engineType = RocketComponent.ENGINE_STEAM;
-            setFuelType(FuelType.STEAM);
-        } else if (RocketComponent.ENGINE_PETROLEUM.componentName().equals(engineStr)) {
-            this.engineType = RocketComponent.ENGINE_PETROLEUM;
-            setFuelType(FuelType.PETROLEUM);
-        } else if (RocketComponent.ENGINE_HYDROGEN.componentName().equals(engineStr)) {
-            this.engineType = RocketComponent.ENGINE_HYDROGEN;
-            setFuelType(FuelType.HYDROGEN);
-        } else if (RocketComponent.ENGINE_IRON.componentName().equals(engineStr)) {
-            addIronEngine(1);
-        }
-        updateFuelQuality();
-    }
-
-    public RocketComponent getEngineType() {
-        return engineType;
-    }
-
-    public int getResearchNum() {
-        return researchNum;
-    }
-
-    public int getWareHouseNum() {
-        return wareHouseNum;
-    }
-
-    public int getFuelBinNum() {
-        return fuelBinNum;
-    }
-
-    public int getOxidantBinNum() {
-        return oxidantBinNum;
-    }
-
-    public void setIronEngineNum(int ironEngineNum) {
-        this.ironEngineNum = ironEngineNum;
-    }
-
-    public int getIronEngineNum() {
-        return ironEngineNum;
-    }
-    
-    public boolean isHasToursim() {
-        return hasToursim;
-    }
-
-    public void setHasToursim(boolean hasToursim) {
-        this.hasToursim = hasToursim;
-    }
-
-    public OxidantType getOxidantType() {
-        return oxidantType;
-    }
-
-    public void setOxidantType(OxidantType oxidantType) {
-        this.oxidantType = oxidantType;
-    }
-    
     public void setOxidantType(String oxidantType) {
         for (OxidantType type : OxidantType.values()) {
             if (type.chiness().equals(oxidantType)) {
@@ -224,27 +207,22 @@ public class Rocket {
         }
     }
 
-    public FuelType getFuelType() {
-        return fuelType;
-    }
 
-    public void setFuelType(FuelType fuelType) {
-        this.fuelType = fuelType;
-    }
-
-    public int getFuelQuality() {
-        return fuelQuality;
-    }
-
-    public void setFuelQuality(int fuelQuality) {
-        this.fuelQuality = fuelQuality;
-    }
-    
-    /**
-     * 获取火箭长度
-     */
-    public int getLength() {
-        return 1 + researchNum + wareHouseNum + fuelBinNum + oxidantBinNum + (engineType == null ? 0 : 1) + ironEngineNum + (hasToursim ? 1 : 0);
+    @Override
+    protected Object clone() {
+        Rocket rocket = new Rocket();
+        rocket.setEngineType(engineType);
+        rocket.setFuelQuality(fuelQuality);
+        rocket.setFuelType(fuelType);
+        rocket.setHasToursim(hasToursim);
+        rocket.setIronEngineNum(ironEngineNum);
+        rocket.setOxidantType(oxidantType);
+        rocket.setTargetHeight(targetHeight);
+        rocket.setFuelBinNum(fuelBinNum);
+        rocket.setOxidantBinNum(oxidantBinNum);
+        rocket.setResearchNum(researchNum);
+        rocket.setWareHouseNum(wareHouseNum);
+        return rocket;
     }
     
     /**
@@ -268,5 +246,93 @@ public class Rocket {
             res.append(Constant.NEW_LINE);
         }
         return res.toString();
+    }
+
+    public int getResearchNum() {
+        return researchNum;
+    }
+
+    public void setResearchNum(int researchNum) {
+        this.researchNum = researchNum;
+    }
+
+    public int getWareHouseNum() {
+        return wareHouseNum;
+    }
+
+    public void setWareHouseNum(int wareHouseNum) {
+        this.wareHouseNum = wareHouseNum;
+    }
+
+    public int getFuelBinNum() {
+        return fuelBinNum;
+    }
+
+    public void setFuelBinNum(int fuelBinNum) {
+        this.fuelBinNum = fuelBinNum;
+    }
+
+    public int getOxidantBinNum() {
+        return oxidantBinNum;
+    }
+
+    public void setOxidantBinNum(int oxidantBinNum) {
+        this.oxidantBinNum = oxidantBinNum;
+    }
+
+    public boolean isHasToursim() {
+        return hasToursim;
+    }
+
+    public void setHasToursim(boolean hasToursim) {
+        this.hasToursim = hasToursim;
+    }
+
+    public OxidantType getOxidantType() {
+        return oxidantType;
+    }
+
+    public void setOxidantType(OxidantType oxidantType) {
+        this.oxidantType = oxidantType;
+    }
+
+    public FuelType getFuelType() {
+        return fuelType;
+    }
+
+    public void setFuelType(FuelType fuelType) {
+        this.fuelType = fuelType;
+    }
+
+    public int getFuelQuality() {
+        return fuelQuality;
+    }
+
+    public void setFuelQuality(int fuelQuality) {
+        this.fuelQuality = fuelQuality;
+    }
+
+    public int getIronEngineNum() {
+        return ironEngineNum;
+    }
+
+    public void setIronEngineNum(int ironEngineNum) {
+        this.ironEngineNum = ironEngineNum;
+    }
+
+    public RocketComponent getEngineType() {
+        return engineType;
+    }
+
+    public void setEngineType(RocketComponent engineType) {
+        this.engineType = engineType;
+    }
+
+    public int getTargetHeight() {
+        return targetHeight;
+    }
+
+    public void setTargetHeight(int targetHeight) {
+        this.targetHeight = targetHeight;
     }
 }
