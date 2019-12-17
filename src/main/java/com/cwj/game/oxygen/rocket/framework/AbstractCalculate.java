@@ -90,6 +90,13 @@ public abstract class AbstractCalculate extends JPanel {
         pasteBtn.addActionListener(pasteListener());
         this.add(pasteBtn);
         
+        // 清空按钮
+        JButton clearBtn = new JButton("清空");
+        clearBtn.setBounds(MARGIN_LEFT + dimension.width, MARGIN_TOP + BUTTON_MARGIN * 2 + dimension.height + DEFAULT_HEIGHT,
+                ROCKET_TEXT_WIDTH, DEFAULT_HEIGHT);
+        clearBtn.addActionListener(clearListener());
+        this.add(clearBtn);
+        
         // 显示结果
         JTextArea result = new JTextArea();
         result.setLineWrap(true);
@@ -226,6 +233,14 @@ public abstract class AbstractCalculate extends JPanel {
             showRocket();
             updateLeftButton();
             showResult();
+        };
+    }
+    
+    private ActionListener clearListener() {
+        return (ActionEvent e) -> {
+            rocket = new Rocket();
+            showRocket();
+            updateLeftButton();
         };
     }
     

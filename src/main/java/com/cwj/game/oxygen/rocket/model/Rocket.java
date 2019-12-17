@@ -43,6 +43,11 @@ public class Rocket implements Cloneable {
     // 目标高度
     private int targetHeight;
     
+    public Rocket() {
+        this.oxidantType = OxidantType.OXYGEN_STONE;
+        this.targetHeight = 10000;
+    }
+    
     /**
      * 复制到剪切板
      */
