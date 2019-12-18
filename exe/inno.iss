@@ -5,7 +5,7 @@ DefaultGroupName=Rocket Calculator
 
 [Files]
 Source: "rocket-calculator.exe"; DestDir: "{app}"
-Source: "jre\*"; DestDir: "{app}"
+Source: "jre\*"; DestDir: "{app}\jre";Flags:igNoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{userdesktop}\Rocket Calculator"; Filename: "{app}\rocket-calculator.exe"; WorkingDir: "{app}"
