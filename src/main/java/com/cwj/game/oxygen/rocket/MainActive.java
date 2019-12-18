@@ -10,7 +10,7 @@ import com.cwj.game.oxygen.rocket.core.CalcMaxLoad;
 public class MainActive {
     
     public static void main(String[] args) {
-        JFrame windows = new JFrame("RP缺氧火箭计算器");
+        JFrame windows = new JFrame("RP缺氧火箭计算器1.0");
         windows.setSize(600, 475);
         windows.setLocationRelativeTo(null);
         windows.setResizable(false);

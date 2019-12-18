@@ -59,7 +59,7 @@ public class Rocket implements Cloneable {
      * 从剪切板粘贴
      */
     public static Rocket paste() {
-        return clipboard;
+        return (Rocket) clipboard.clone();
     }
     
     /**

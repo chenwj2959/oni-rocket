@@ -6,24 +6,10 @@
         </encoder>
     </appender>
 
-    <!-- <appender name="MAIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy
-            class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <FileNamePattern>logs/%d{yyyyMMdd}/Main(%i).log.gz
-            </FileNamePattern>
-            <maxHistory>30</maxHistory>
-            <maxFileSize>30MB</maxFileSize>
-        </rollingPolicy>
-        <encoder>
-            <pattern>[%d{HH:mm:ss.SSS}][%p][%X{logName}] %logger{0}.%M:%L - %m%n</pattern>
-        </encoder>
-    </appender> -->
-
     <root>
         <level value="error" />
         <level value="info" />
         <level value="debug" />
         <appender-ref ref="STDOUT" />
-        <!-- <appender-ref ref="MAIN" /> -->
     </root>
 </configuration>
