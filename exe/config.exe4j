@@ -24,7 +24,7 @@
       <registry />
     </searchSequence>
     <classPath>
-      <archive location="D:/Demo/Java/Server/Brainstorming/Git/oxygen-rocket/exe/oxygen-rocket1.0.jar" failOnError="false" />
+      <archive location="D:/Demo/Java/Server/Brainstorming/Git/oxygen-rocket/exe/oxygen-rocket.jar" failOnError="false" />
     </classPath>
     <modulePath />
     <nativeLibraryDirectories>
