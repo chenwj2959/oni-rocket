@@ -54,7 +54,8 @@ public class CalcFuelQuality extends AbstractCalculate {
         // 最大燃料质量
         int maxFuelQuality = maxFinalHeightResult.getFuelQuality();
         // 大于4000kg时最小燃料质量
-        int minFuelQuality = Math.max(Constant.QUALITY_QUNISHMENT_SPLIT_VALUE - rocket.getComponentQuality() + 1, 0);
+        int minFuelQuality = Constant.QUALITY_QUNISHMENT_SPLIT_VALUE - rocket.getComponentQuality();
+        minFuelQuality = RocketComponent.ENGINE_STEAM.equals(rocket.getEngineType()) ? minFuelQuality : (int) Math.floor(minFuelQuality / 2) + 1;
         if (minFuelQuality > 0) {
          // 计算最小燃料质量的飞行高度, 如果最小也大于目标值, 则考虑小于等于4000kg
             int minTotalQuality = RocketUtil.calcTotalQuality(rocket, minFuelQuality);
