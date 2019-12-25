@@ -39,4 +39,3 @@
   
 * 由于使用Java编写安装包Rocket Calculator1.1.exe包含完整jre所以会比较大
 * 安装过java环境可以下载rocket-calculator.exe，exe依赖于环境变量JAVA_HOME或JRE_HOME，最好使用jdk1.8
-* 觉得好用可以点下"Star"关注后续更新
