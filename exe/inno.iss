@@ -1,5 +1,5 @@
 [Setup]
-AppName=Rocket CalculatorAppVersion=1.0
+AppName=Rocket CalculatorAppVersion=1.1
 DefaultDirName={pf}\Rocket Calculator
 DefaultGroupName=Rocket Calculator
 
