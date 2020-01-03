@@ -1,4 +1,5 @@
 [Setup]
+AppId={47D20A1C-E250-4735-99BC-DA9D57CD0CDD}
 AppName=Rocket CalculatorAppVersion=1.1
 DefaultDirName={pf}\Rocket Calculator
 DefaultGroupName=Rocket Calculator
