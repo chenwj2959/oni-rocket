@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.cwj.game</groupId>
-	<artifactId>oxygen-rocket</artifactId>
+	<artifactId>oni-rocket</artifactId>
 	<version>1.1</version>
 	<packaging>jar</packaging>
 
-	<name>oxygen-rocket</name>
+	<name>oni-rocket</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
@@ -42,7 +42,7 @@
 	</dependencies>
 
 	<build>
-		<finalName>oxygen-rocket</finalName>
+		<finalName>oni-rocket</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

@@ -1,9 +1,9 @@
-package com.cwj.game.oxygen.rocket.model;
+package com.cwj.game.oni.rocket.model;
 
-import com.cwj.game.oxygen.rocket.constant.Constant;
-import com.cwj.game.oxygen.rocket.constant.FuelType;
-import com.cwj.game.oxygen.rocket.constant.OxidantType;
-import com.cwj.game.oxygen.rocket.constant.RocketComponent;
+import com.cwj.game.oni.rocket.constant.Constant;
+import com.cwj.game.oni.rocket.constant.FuelType;
+import com.cwj.game.oni.rocket.constant.OxidantType;
+import com.cwj.game.oni.rocket.constant.RocketComponent;
 
 public class Rocket implements Cloneable {
     

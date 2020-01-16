@@ -1,12 +1,12 @@
-package com.cwj.game.oxygen.rocket;
+package com.cwj.game.oni.rocket;
 
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
-import com.cwj.game.oxygen.rocket.core.CalcFuelQuality;
-import com.cwj.game.oxygen.rocket.core.CalcMaxHeight;
-import com.cwj.game.oxygen.rocket.core.CalcMaxLoad;
+import com.cwj.game.oni.rocket.core.CalcFuelQuality;
+import com.cwj.game.oni.rocket.core.CalcMaxHeight;
+import com.cwj.game.oni.rocket.core.CalcMaxLoad;
 
 public class MainActive {
     

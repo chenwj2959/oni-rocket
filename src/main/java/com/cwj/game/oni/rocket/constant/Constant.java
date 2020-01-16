@@ -1,4 +1,4 @@
-package com.cwj.game.oxygen.rocket.constant;
+package com.cwj.game.oni.rocket.constant;
 
 public class Constant {
     

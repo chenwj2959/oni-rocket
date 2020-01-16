@@ -1,12 +1,12 @@
-package com.cwj.game.oxygen.rocket.core;
+package com.cwj.game.oni.rocket.core;
 
 import javax.swing.JComboBox;
 
-import com.cwj.game.oxygen.rocket.constant.Constant;
-import com.cwj.game.oxygen.rocket.constant.RocketComponent;
-import com.cwj.game.oxygen.rocket.framework.AbstractCalculate;
-import com.cwj.game.oxygen.rocket.model.Result;
-import com.cwj.game.oxygen.rocket.utils.RocketUtil;
+import com.cwj.game.oni.rocket.constant.Constant;
+import com.cwj.game.oni.rocket.constant.RocketComponent;
+import com.cwj.game.oni.rocket.framework.AbstractCalculate;
+import com.cwj.game.oni.rocket.model.Result;
+import com.cwj.game.oni.rocket.utils.RocketUtil;
 
 /**
  * 计算火箭到达目标高度最佳的燃料质量

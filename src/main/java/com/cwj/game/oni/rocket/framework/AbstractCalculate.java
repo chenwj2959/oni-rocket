@@ -1,4 +1,4 @@
-package com.cwj.game.oxygen.rocket.framework;
+package com.cwj.game.oni.rocket.framework;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -22,11 +22,11 @@ import javax.swing.JTextArea;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.cwj.game.oxygen.rocket.constant.Constant;
-import com.cwj.game.oxygen.rocket.constant.OxidantType;
-import com.cwj.game.oxygen.rocket.constant.RocketComponent;
-import com.cwj.game.oxygen.rocket.model.Rocket;
-import com.cwj.game.oxygen.rocket.utils.RocketUtil;
+import com.cwj.game.oni.rocket.constant.Constant;
+import com.cwj.game.oni.rocket.constant.OxidantType;
+import com.cwj.game.oni.rocket.constant.RocketComponent;
+import com.cwj.game.oni.rocket.model.Rocket;
+import com.cwj.game.oni.rocket.utils.RocketUtil;
 
 public abstract class AbstractCalculate extends JPanel {
 

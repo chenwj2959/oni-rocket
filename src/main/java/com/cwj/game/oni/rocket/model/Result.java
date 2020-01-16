@@ -1,6 +1,6 @@
-package com.cwj.game.oxygen.rocket.model;
+package com.cwj.game.oni.rocket.model;
 
-import com.cwj.game.oxygen.rocket.constant.Constant;
+import com.cwj.game.oni.rocket.constant.Constant;
 
 public class Result {
 

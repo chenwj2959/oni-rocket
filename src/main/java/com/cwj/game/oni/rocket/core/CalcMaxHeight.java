@@ -1,8 +1,8 @@
-package com.cwj.game.oxygen.rocket.core;
+package com.cwj.game.oni.rocket.core;
 
-import com.cwj.game.oxygen.rocket.framework.AbstractCalculate;
-import com.cwj.game.oxygen.rocket.model.Result;
-import com.cwj.game.oxygen.rocket.utils.RocketUtil;
+import com.cwj.game.oni.rocket.framework.AbstractCalculate;
+import com.cwj.game.oni.rocket.model.Result;
+import com.cwj.game.oni.rocket.utils.RocketUtil;
 
 /**
  * 根据火箭组成计算能到达的最大高度
