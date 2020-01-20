@@ -4,7 +4,7 @@
 
 	<groupId>com.cwj.game</groupId>
 	<artifactId>oni-rocket</artifactId>
-	<version>1.1</version>
+	<version>1.2</version>
 	<packaging>jar</packaging>
 
 	<name>oni-rocket</name>
@@ -58,7 +58,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.cwj.game.oxygen.rocket.MainActive</mainClass>
+							<mainClass>com.cwj.game.oni.rocket.MainActive</mainClass>
 						</manifest>
 						<manifestEntries>
 							<Class-Path>.</Class-Path>

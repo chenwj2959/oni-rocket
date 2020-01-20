@@ -26,4 +26,5 @@ hs_err_pid*
 .project
 /exe/jre/
 /exe/Output/
-/exe/rocket-calculator.exe
+/exe/oni-rocket.exe
+/exe/oni-rocket-jar-with-dependencies.jar

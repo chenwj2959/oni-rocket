@@ -11,7 +11,7 @@ import com.cwj.game.oni.rocket.core.CalcMaxLoad;
 public class MainActive {
     
     public static void main(String[] args) {
-        JFrame windows = new JFrame("RP缺氧火箭计算器1.1");
+        JFrame windows = new JFrame("RP缺氧火箭计算器1.2");
         windows.setSize(600, 475);
         windows.setIconImage(new ImageIcon(MainActive.class.getResource("/logo.png")).getImage());
         windows.setLocationRelativeTo(null);

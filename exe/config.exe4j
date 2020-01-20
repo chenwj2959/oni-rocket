@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <exe4j version="6.0.1" transformSequenceNumber="2">
-  <directoryPresets config="D:/Demo/Java/Server/Brainstorming/Git/oxygen-rocket/exe" />
-  <application name="rocket-calculator" distributionSourceDir="D:/Demo/Java/Server/Brainstorming/Git/oxygen-rocket/exe">
+  <directoryPresets config="D:/Demo/Java/Server/Brainstorming/Git/oni-rocket/exe" />
+  <application name="oni-rocket" distributionSourceDir="D:/Demo/Java/Server/Brainstorming/Git/oni-rocket/exe">
     <languages>
       <principalLanguage id="en" customLocalizationFile="" />
     </languages>
   </application>
-  <executable name="rocket-calculator" type="2" iconSet="true" iconFile="D:/Demo/Java/Server/Brainstorming/Git/oxygen-rocket/exe/logo.ico" executableDir="." redirectStderr="false" stderrFile="error.log" stderrMode="append" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="true" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="true" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="false" amd64="true">
+  <executable name="oni-rocket" type="2" iconSet="true" iconFile="D:/Demo/Java/Server/Brainstorming/Git/oni-rocket/exe/logo.ico" executableDir="." redirectStderr="false" stderrFile="error.log" stderrMode="append" redirectStdout="false" stdoutFile="output.log" stdoutMode="overwrite" failOnStderrOutput="true" executableMode="1" changeWorkingDirectory="true" workingDirectory="." singleInstance="true" serviceStartType="2" serviceDependencies="" serviceDescription="" jreLocation="" executionLevel="asInvoker" checkConsoleParameter="true" globalSingleInstance="false" singleInstanceActivate="true" dpiAware="false" amd64="true">
     <messageSet />
     <versionInfo include="false" fileVersion="" fileDescription="" legalCopyright="" internalName="" productName="" companyName="" productVersion="" />
   </executable>
@@ -16,7 +16,7 @@
       <versionLine x="20" y="40" text="version %VERSION%" fontSize="8" fontColor="0,0,0" bold="false" />
     </text>
   </splashScreen>
-  <java mainClass="com.cwj.game.oxygen.rocket.MainActive" mainMode="1" vmParameters="" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true" minVersion="1.8" maxVersion="1.8" allowBetaVM="false" jdkOnly="false">
+  <java mainClass="com.cwj.game.oni.rocket.MainActive" mainMode="1" vmParameters="" arguments="" allowVMPassthroughParameters="true" preferredVM="" bundleRuntime="true" minVersion="1.8" maxVersion="1.8" allowBetaVM="false" jdkOnly="false">
     <searchSequence>
       <directory location="./jre" />
       <envVar name="JAVA_HOME" />
@@ -24,7 +24,7 @@
       <registry />
     </searchSequence>
     <classPath>
-      <archive location="D:/Demo/Java/Server/Brainstorming/Git/oxygen-rocket/exe/oxygen-rocket.jar" failOnError="false" />
+      <archive location="D:/Demo/Java/Server/Brainstorming/Git/oni-rocket/exe/oni-rocket-jar-with-dependencies.jar" failOnError="false" />
     </classPath>
     <modulePath />
     <nativeLibraryDirectories>
