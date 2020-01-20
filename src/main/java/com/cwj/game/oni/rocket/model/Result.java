@@ -3,7 +3,7 @@ package com.cwj.game.oni.rocket.model;
 import com.cwj.game.oni.rocket.constant.Constant;
 
 public class Result {
-
+    
     private int finalHeight;
     
     private int totalQuality;
@@ -26,8 +26,16 @@ public class Result {
         else if (result != null) builder.append(result).append(Constant.NEW_LINE);
         builder.append("火箭长度 = ").append(rocketLength).append("节").append(Constant.NEW_LINE)
             .append("组件质量 = ").append(componentQuality).append(" kg").append(Constant.NEW_LINE)
-            .append("燃料质量 = ").append(fuelQuality).append(" kg").append(Constant.NEW_LINE)
-            .append("总质量 = ").append(totalQuality).append(" kg").append(Constant.NEW_LINE)
+            .append("氧化剂质量 = ").append(fuelQuality).append(" kg").append(Constant.NEW_LINE);
+        int fuelBinNum = fuelQuality / Constant.FUEL_BIN_MAX_QUALITY;
+        if (fuelBinNum > 0) {
+            builder.append("燃料质量 = ").append(Constant.FUEL_BIN_MAX_QUALITY);
+            if (fuelBinNum > 1) builder.append(" * ").append(fuelBinNum);
+            fuelQuality -= Constant.FUEL_BIN_MAX_QUALITY * fuelBinNum;
+            if (fuelQuality > 0) builder.append(" + ").append(fuelQuality);
+            builder.append(" kg").append(Constant.NEW_LINE);
+        }
+        builder.append("总质量 = ").append(totalQuality).append(" kg").append(Constant.NEW_LINE)
             .append("质量惩罚距离 = ").append(qualityPunishment).append(" km").append(Constant.NEW_LINE)
             .append("最大推进距离 = ").append(maxHeight).append(" km").append(Constant.NEW_LINE)
             .append("最大飞行高度 = ").append(finalHeight).append(" km");
@@ -41,8 +49,16 @@ public class Result {
         builder.append("火箭长度 = ").append(rocketLength).append("节").append(Constant.NEW_LINE)
             .append("组件质量 = ").append(componentQuality).append(" kg").append(Constant.NEW_LINE)
             .append("最大可负载质量 = ").append(maxLoadQuality).append(" kg").append(Constant.NEW_LINE)
-            .append("最佳燃料质量 = ").append(fuelQuality).append(" kg").append(Constant.NEW_LINE)
-            .append("总质量 = ").append(totalQuality).append(" kg").append(Constant.NEW_LINE)
+            .append("氧化剂质量 = ").append(fuelQuality).append(" kg").append(Constant.NEW_LINE);
+        int fuelBinNum = fuelQuality % Constant.FUEL_BIN_MAX_QUALITY;
+        if (fuelBinNum > 0) {
+            builder.append("燃料质量 = ").append(Constant.FUEL_BIN_MAX_QUALITY);
+            if (fuelBinNum > 1) builder.append(" * ").append(fuelBinNum);
+            fuelQuality -= Constant.FUEL_BIN_MAX_QUALITY * fuelBinNum;
+            if (fuelQuality > 0) builder.append(" + ").append(fuelQuality);
+            builder.append(" kg").append(Constant.NEW_LINE);
+        }
+        builder.append("总质量 = ").append(totalQuality).append(" kg").append(Constant.NEW_LINE)
             .append("质量惩罚距离 = ").append(qualityPunishment).append(" km").append(Constant.NEW_LINE)
             .append("最大推进距离 = ").append(maxHeight).append(" km").append(Constant.NEW_LINE)
             .append("最大飞行高度 = ").append(finalHeight).append(" km");

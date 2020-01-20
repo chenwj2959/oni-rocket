@@ -4,6 +4,7 @@ public class Constant {
     
     // === COMMON ===
     public static final String NEW_LINE = "\n";
+    public static final String TAB = "## ";
     
     public static final String LABEL_OXIDANT_TYPE = "氧化剂类型";
     

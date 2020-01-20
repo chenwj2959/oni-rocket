@@ -15,8 +15,6 @@ public class CalcMaxLoad extends AbstractCalculate {
 
     private static final long serialVersionUID = 1L;
     
-    private static final String TAB = "##";
-    
     public CalcMaxLoad() {
         super(true, RocketComponent.RESEARCH, RocketComponent.WAREHOUSE, RocketComponent.TOURISM);
     }
@@ -62,10 +60,10 @@ public class CalcMaxLoad extends AbstractCalculate {
         StringBuilder builder = new StringBuilder();
         builder.append("最多能负载:").append(Constant.NEW_LINE);
         int warehourseQuality = warehouseNum * RocketComponent.WAREHOUSE.quality();
-        if (warehouseNum != 0) builder.append(TAB).append(warehouseNum).append("个货仓(").append(warehourseQuality).append("kg)").append(Constant.NEW_LINE);
+        if (warehouseNum != 0) builder.append(Constant.TAB).append(warehouseNum).append("个货仓(").append(warehourseQuality).append("kg)").append(Constant.NEW_LINE);
         int researchQuality = researchNum * RocketComponent.RESEARCH.quality();
-        if (researchNum != 0) builder.append(TAB).append(researchNum).append("个研究仓(").append(researchQuality).append("kg)").append(Constant.NEW_LINE);
-        builder.append(TAB).append("总计:").append(warehourseQuality + researchQuality).append("kg");
+        if (researchNum != 0) builder.append(Constant.TAB).append(researchNum).append("个研究仓(").append(researchQuality).append("kg)").append(Constant.NEW_LINE);
+        builder.append(Constant.TAB).append("总计:").append(warehourseQuality + researchQuality).append("kg");
         return result.getResult(builder.toString());
     }
     
