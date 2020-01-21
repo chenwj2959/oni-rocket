@@ -37,5 +37,5 @@
   
 ![image](https://raw.githubusercontent.com/wiki/chenwj2959/oxygen-rocket/oxygen-not-include-rocket-calculator.png)  
   
-* 由于使用Java编写安装包rocket-calculator-install-1.1.exe包含完整jre所以会比较大
-* 安装过java环境可以下载Rocket Calculator.exe，exe依赖于环境变量JAVA_HOME或JRE_HOME，最好使用jdk1.8
+* 由于使用Java编写, 安装包Rocket Calculator1.2.exe包含完整jre所以会比较大
+* 安装过java环境可以下载oni-rocket.exe, exe依赖于环境变量JAVA_HOME或JRE_HOME，最好使用jdk1.8
