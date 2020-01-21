@@ -26,7 +26,6 @@ import com.cwj.game.oni.rocket.constant.Constant;
 import com.cwj.game.oni.rocket.constant.OxidantType;
 import com.cwj.game.oni.rocket.constant.RocketComponent;
 import com.cwj.game.oni.rocket.model.Rocket;
-import com.cwj.game.oni.rocket.utils.RocketUtil;
 
 public abstract class AbstractCalculate extends JPanel {
 
@@ -259,11 +258,6 @@ public abstract class AbstractCalculate extends JPanel {
      */
     protected void showResult() {
         JTextArea resultText = (JTextArea) get(RESULT);
-        String issues = RocketUtil.checkRocket(rocket);
-        if (issues != null) {
-            resultText.setText(issues);
-            return;
-        }
         String result = calcResult();
         if (result == null) resultText.setText("火箭无法起飞！");
         else resultText.setText(result);

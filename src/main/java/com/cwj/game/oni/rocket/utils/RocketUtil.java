@@ -12,11 +12,6 @@ import com.cwj.game.oni.rocket.model.Rocket;
 public class RocketUtil {
 
     private static final Logger log = LoggerFactory.getLogger(RocketUtil.class);
-
-    // TODO 检查火箭是否完整
-    public static String checkRocket(Rocket rocket) {
-        return null;
-    }
     
     /**
      * 计算火箭最大的飞行高度
@@ -93,9 +88,6 @@ public class RocketUtil {
         log.debug("火箭组件质量 = {} kg", componentQuality);
         fuelQuality *= RocketComponent.ENGINE_STEAM.equals(rocket.getEngineType()) ? 1 : 2;
         log.debug("火箭液体燃料质量 = {} kg", fuelQuality);
-//        int ironFuelQuality = rocket.getIronEngineNum() * Constant.ENGINE_IRON_MAX_FUEL_QUALITY;
-//        if (ironFuelQuality != 0) log.debug("火箭固体燃料质量 = {} kg", ironFuelQuality);
-//        int totalQuality = componentQuality + fuelQuality + ironFuelQuality;
         int totalQuality = componentQuality + fuelQuality;
         log.debug("火箭总质量 = {} kg", totalQuality);
         return totalQuality;

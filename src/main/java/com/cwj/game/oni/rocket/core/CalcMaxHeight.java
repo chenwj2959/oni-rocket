@@ -22,7 +22,6 @@ public class CalcMaxHeight extends AbstractCalculate {
     protected String calcResult() {
         Result result = RocketUtil.calcMaxFinalHeight(rocket);
         if (result == null) return null;
-        log.debug(result.getResult(null));
         return result.getResult(null);
     }
 }
