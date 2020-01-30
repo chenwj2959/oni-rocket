@@ -1,5 +1,7 @@
 package com.cwj.game.oni.rocket.model;
 
+import java.util.Objects;
+
 import com.cwj.game.oni.rocket.constant.Constant;
 import com.cwj.game.oni.rocket.constant.FuelType;
 import com.cwj.game.oni.rocket.constant.OxidantType;
@@ -52,6 +54,7 @@ public class Rocket implements Cloneable {
      * 复制到剪切板
      */
     public static void copy(Rocket rocket) {
+    	Objects.requireNonNull(rocket);
         clipboard = (Rocket) rocket.clone();
     }
     
@@ -59,7 +62,7 @@ public class Rocket implements Cloneable {
      * 从剪切板粘贴
      */
     public static Rocket paste() {
-        return (Rocket) clipboard.clone();
+        return clipboard == null ? null : (Rocket) clipboard.clone();
     }
     
     /**
